@@ -8,6 +8,20 @@ type testCreate struct {
 	want string
 }
 
+type testApply struct {
+	root  string
+	sub   string
+	apply string
+	want  string
+}
+
+type testUp struct {
+	root   string
+	sub    string
+	amount int // how often to call up
+	want   string
+}
+
 func TestRelativePathCreate(t *testing.T) {
 	t.Log("Testing CreatePathRoot")
 	testCreateRootPath := []testCreate{
@@ -42,4 +56,36 @@ func TestRelativePathCreate(t *testing.T) {
 
 func TestRelativePathApply(t *testing.T) {
 	t.Log("Testing Apply")
+	testApply := []testApply{
+		{"/a", "b", "/a/b/c", "/a/b/c"},
+		{"/a/b", "c/d", "e/f", "/a/b/e/f"},
+		{"/", "", "/a////b", "/a/b"},
+		{"", "a/b/c/d/", "e", "/e"},
+		{"/a", "/b", "/c/d", "/a/b"}} // tests against different root
+	for _, set := range testApply {
+		path := CreatePath(set.root, set.sub)
+		path = path.Apply(set.apply)
+		result := path.FullPath()
+		if result != set.want {
+			t.Error("Expected", set.want, "got", result)
+		}
+	}
+}
+
+func TestRelativePathUp(t *testing.T) {
+	t.Log("Testing Up")
+	testUp := []testUp{
+		{"root", "sub", 4, "/root"},
+		{"/a/b/c/d", "e//f////g/", 2, "/a/b/c/d/e"},
+		{"a/b", "c", 1, "/a/b"}}
+	for _, set := range testUp {
+		path := CreatePath(set.root, set.sub)
+		for count := 0; count < set.amount; count++ {
+			path = path.Up()
+		}
+		result := path.FullPath()
+		if result != set.want {
+			t.Error("Expected", set.want, "got", result)
+		}
+	}
 }

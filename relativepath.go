@@ -1,9 +1,6 @@
 package shared
 
-import (
-	"log"
-	"strings"
-)
+import "strings"
 
 /*
 RelativePath implements a path consisting of a base path and any subpath that
@@ -62,19 +59,26 @@ func (r *RelativePath) RootPath() string {
 }
 
 /*
-Apply tries to apply the given path to the RelativePath. If it fails it will
-return the unmodified RelativePath.
-
-TODO this is wrong. Test it!
+Apply does two different things depending on the path given. If path begins with
+"/" it is considered an absolute path and must match the root of the calling
+path. Otherwise the path is applied as a new sub path, replacing the old value.
 */
 func (r *RelativePath) Apply(path string) *RelativePath {
-	log.Println("RelativePath.Apply is not yet correct!")
-	if strings.HasPrefix(path, r.FullPath()) {
+	// absolute path?
+	if strings.HasPrefix(path, "/") {
+		// same root?
+		if !strings.HasPrefix(path, r.RootPath()) {
+			// if not: return copy of r without applying
+			return CreatePath(r.RootPath(), r.SubPath())
+		}
+		// otherwise set new subpath
 		relPath := CreatePathRoot(path)
 		relPath.limit = r.limit
 		return relPath
 	}
-	return &RelativePath{limit: r.limit, stack: r.stack}
+	// relative path simply replaces the sub path
+	relPath := CreatePath(r.RootPath(), path)
+	return relPath
 }
 
 /*
@@ -85,12 +89,9 @@ func (r *RelativePath) Depth() int {
 }
 
 /*
-Up removes the last element from the path, up to the root path.
-
-TODO this may be wrong. Test it!
+Up removes the last element from the path, up to the root path (and no further!).
 */
 func (r *RelativePath) Up() *RelativePath {
-	log.Println("RelativePath.Up may be wrong yet!")
 	pop := len(r.stack) - 1
 	if pop < r.limit {
 		pop = r.limit
