@@ -77,7 +77,8 @@ func TestRelativePathUp(t *testing.T) {
 	testUp := []testUp{
 		{"root", "sub", 4, "/root"},
 		{"/a/b/c/d", "e//f////g/", 2, "/a/b/c/d/e"},
-		{"a/b", "c", 1, "/a/b"}}
+		{"a/b", "c", 1, "/a/b"},
+		{"/", "a/b", 200, "/"}} // extreme test
 	for _, set := range testUp {
 		path := CreatePath(set.root, set.sub)
 		for count := 0; count < set.amount; count++ {
