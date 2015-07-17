@@ -19,9 +19,9 @@ type Peer struct {
 }
 
 /*
-loadPeers loads all peers for the given tinzenite root path.
+LoadPeers loads all peers for the given tinzenite root path.
 */
-func loadPeers(root string) ([]*Peer, error) {
+func LoadPeers(root string) ([]*Peer, error) {
 	path := root + "/" + TINZENITEDIR + "/" + ORGDIR + "/" + PEERSDIR
 	peersFiles, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -46,9 +46,9 @@ func loadPeers(root string) ([]*Peer, error) {
 }
 
 /*
-JSON representation of peer.
+Store JSON representation of peer.
 */
-func (p *Peer) store(root string) error {
+func (p *Peer) Store(root string) error {
 	data, err := json.MarshalIndent(p, "", "  ")
 	if err != nil {
 		return err
