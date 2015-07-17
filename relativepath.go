@@ -19,12 +19,7 @@ CreatePathRoot creates a RelativePath with the given root path.
 */
 func CreatePathRoot(root string) *RelativePath {
 	r := RelativePath{}
-	list := strings.Split(root, "/")
-	for _, element := range list {
-		if element != "" {
-			r.stack = append(r.stack, element)
-		}
-	}
+	r.stack = r.sanitize(root)
 	r.limit = len(r.stack)
 	return &r
 }
@@ -34,7 +29,8 @@ CreatePath creates a path directly with a subpath selected.
 */
 func CreatePath(root string, subpath string) *RelativePath {
 	r := CreatePathRoot(root)
-	return r.Apply(root + "/" + subpath)
+	r.stack = append(r.stack, r.sanitize(subpath)...)
+	return r
 }
 
 /*
@@ -100,4 +96,15 @@ func (r *RelativePath) Up() *RelativePath {
 		pop = r.limit
 	}
 	return &RelativePath{limit: r.limit, stack: r.stack[:pop]}
+}
+
+func (r *RelativePath) sanitize(path string) []string {
+	splitted := strings.Split(path, "/")
+	var clean []string
+	for _, value := range splitted {
+		if value != "" {
+			clean = append(clean, value)
+		}
+	}
+	return clean
 }
