@@ -2,15 +2,15 @@ package shared
 
 import "testing"
 
-type testPath struct {
+type testCreate struct {
 	root string
 	sub  string
 	want string
 }
 
-func TestCreateRelativePath(t *testing.T) {
+func TestRelativePathCreate(t *testing.T) {
 	t.Log("Testing CreatePathRoot")
-	testCreateRootPath := []testPath{
+	testCreateRootPath := []testCreate{
 		{"///a///b  c/d", "", "/a/b  c/d"},
 		{"", "", "/"},
 		{"/!\"§$%&/()=}", "", "/!\"§$%&/()=}"},
@@ -23,7 +23,7 @@ func TestCreateRelativePath(t *testing.T) {
 		}
 	}
 	t.Log("Testing CreatePath")
-	testCreatePath := []testPath{
+	testCreatePath := []testCreate{
 		{"/a", "b", "/a/b"},
 		{"/a/b", "c/d", "/a/b/c/d"},
 		{"/a", "/b/", "/a/b"},
@@ -38,4 +38,8 @@ func TestCreateRelativePath(t *testing.T) {
 			t.Error("Expected", set.want, "got", result)
 		}
 	}
+}
+
+func TestRelativePathApply(t *testing.T) {
+	t.Log("Testing Apply")
 }
