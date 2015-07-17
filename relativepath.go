@@ -89,6 +89,13 @@ func (r *RelativePath) Depth() int {
 }
 
 /*
+AtRoot signals whether the path has any sub path.
+*/
+func (r *RelativePath) AtRoot() bool {
+	return len(r.stack) == r.limit
+}
+
+/*
 Up removes the last element from the path, up to the root path (and no further!).
 */
 func (r *RelativePath) Up() *RelativePath {
