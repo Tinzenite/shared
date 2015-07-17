@@ -12,18 +12,15 @@ var (
 	ErrNoTinIgnore      = errors.New("no .tinignore file found")
 	ErrUntracked        = errors.New("object is not tracked in the model")
 	ErrNilInternalState = errors.New("internal state has illegal NIL values")
+	ErrConflict         = errors.New("conflict, can not apply")
+	ErrIllegalFileState = errors.New("illegal file state detected")
 )
 
 /*
 Internal errors of Tinzenite.
 */
 var (
-	errWrongObject       = errors.New("wrong ObjectInfo")
-	errConflict          = errors.New("conflict, can not apply")
-	errIllegalFileState  = errors.New("illegal file state detected")
-	errModelInconsitent  = errors.New("model tracked and staticinfo are inconsistent")
-	errMissingUpdateFile = errors.New("file for update missing from temp")
-	errMismatch          = errors.New("mismatch in structs")
+	errWrongObject = errors.New("wrong ObjectInfo")
 )
 
 // constant value here

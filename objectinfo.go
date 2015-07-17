@@ -1,12 +1,15 @@
 package shared
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"os"
+)
 
 /*
 ObjectInfo represents the in model object fully.
 */
 type ObjectInfo struct {
-	directory      bool // safety check wether the obj is a dir
+	Directory      bool
 	Identification string
 	Name           string
 	Path           string
@@ -17,23 +20,35 @@ type ObjectInfo struct {
 }
 
 /*
-createObjectInfo is a TEST function for creating an object for the specified
+CreateObjectInfo is a TEST function for creating an object for the specified
 parameters.
 */
-func createObjectInfo(root string, subpath string, selfid string) (*ObjectInfo, error) {
-	path := createPath(root, subpath)
-	stin, err := createStaticInfo(path.FullPath(), selfid)
+func CreateObjectInfo(root string, subpath string, selfid string) (*ObjectInfo, error) {
+	path := CreatePath(root, subpath)
+	// fetch all values we'll need to store
+	id, err := NewIdentifier()
 	if err != nil {
 		return nil, err
 	}
+	stat, err := os.Lstat(path.FullPath())
+	if err != nil {
+		return nil, err
+	}
+	hash := ""
+	if !stat.IsDir() {
+		hash, err = ContentHash(path.FullPath())
+		if err != nil {
+			return nil, err
+		}
+	}
 	return &ObjectInfo{
-		directory:      stin.Directory,
-		Identification: stin.Identification,
+		Directory:      stat.IsDir(),
+		Identification: id,
 		Name:           path.LastElement(),
-		Path:           path.Subpath(),
+		Path:           path.SubPath(),
 		Shadow:         false,
-		Version:        stin.Version,
-		Content:        stin.Content}, nil
+		Version:        Version{},
+		Content:        hash}, nil
 }
 
 /*

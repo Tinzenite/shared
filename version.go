@@ -35,7 +35,7 @@ func (v Version) Max() int {
 Valid checks whether the version can be automerged or whether manual resolution
 is required.
 */
-func (v Version) Valid(that version, selfid string) (Version, bool) {
+func (v Version) Valid(that Version, selfid string) (Version, bool) {
 	if v.Max() > that.Max() {
 		// local version is ahead
 		log.Println("Local version is ahead of remote version!")

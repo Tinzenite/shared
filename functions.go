@@ -10,8 +10,6 @@ import (
 	"os"
 	"os/user"
 	"strings"
-
-	"github.com/tinzenite/core"
 )
 
 /*
@@ -58,7 +56,10 @@ func PrettifyDirectoryList() error {
 	return ioutil.WriteFile(path, []byte(newContents), FILEPERMISSIONMODE)
 }
 
-func randomHash() (string, error) {
+/*
+RandomHash genereates one long random hash.
+*/
+func RandomHash() (string, error) {
 	data := make([]byte, RANDOMSEEDLENGTH)
 	_, err := rand.Read(data)
 	if err != nil {
@@ -73,10 +74,10 @@ func randomHash() (string, error) {
 }
 
 /*
-Creates a new random hash that is intended as identification strings for all
-manner of different objects. Length is IDMAXLENGTH.
+NewIdentifier creates a new random hash that is intended as identification
+strings for all manner of different objects. Length is IDMAXLENGTH.
 */
-func newIdentifier() (string, error) {
+func NewIdentifier() (string, error) {
 	data := make([]byte, RANDOMSEEDLENGTH)
 	_, err := rand.Read(data)
 	if err != nil {
@@ -90,7 +91,10 @@ func newIdentifier() (string, error) {
 	return hex.EncodeToString(hash.Sum(nil))[:IDMAXLENGTH], nil
 }
 
-func contentHash(path string) (string, error) {
+/*
+ContentHash generates the hash of the content of the given file at path.
+*/
+func ContentHash(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return "", err
@@ -108,7 +112,10 @@ func contentHash(path string) (string, error) {
 	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
-func makeDirectory(path string) error {
+/*
+MakeDirectory creates the path.
+*/
+func MakeDirectory(path string) error {
 	err := os.MkdirAll(path, FILEPERMISSIONMODE)
 	// TODO this doesn't seem to work... why not?
 	if err == os.ErrExist {
@@ -119,12 +126,12 @@ func makeDirectory(path string) error {
 }
 
 /*
-makeDirectories creates a number of directories in the given root path. Useful
+MakeDirectories creates a number of directories in the given root path. Useful
 if a complete directory tree has to be built at once.
 */
-func makeDirectories(root string, subdirs ...string) error {
+func MakeDirectories(root string, subdirs ...string) error {
 	for _, path := range subdirs {
-		err := makeDirectory(root + "/" + path)
+		err := MakeDirectory(root + "/" + path)
 		if err != nil {
 			return err
 		}
@@ -133,9 +140,9 @@ func makeDirectories(root string, subdirs ...string) error {
 }
 
 /*
-fileExists checks whether a file at that location exists.
+FileExists checks whether a file at that location exists.
 */
-func fileExists(path string) bool {
+func FileExists(path string) bool {
 	/*TODO differentiate between dir and file?*/
 	_, err := os.Lstat(path)
 	return err == nil
@@ -146,7 +153,7 @@ toxPeerDump stores the self peer information along with the tox binary data
 required for it to work.
 */
 type toxPeerDump struct {
-	SelfPeer *core.Peer
+	SelfPeer *Peer
 	ToxData  []byte
 }
 
@@ -177,23 +184,10 @@ func (t *toxPeerDump) store(root string) error {
 	return ioutil.WriteFile(root+"/"+TINZENITEDIR+"/"+LOCALDIR+"/"+SELFPEERJSON, data, FILEPERMISSIONMODE)
 }
 
-// sortable allows sorting Objectinfos by path.
-type sortable []*ObjectInfo
-
-func (s sortable) Len() int {
-	return len(s)
-}
-
-func (s sortable) Swap(i, j int) {
-	s[i], s[j] = s[j], s[i]
-}
-
-func (s sortable) Less(i, j int) bool {
-	// path are sorted alphabetically all by themselves! :D
-	return s[i].Path < s[j].Path
-}
-
-func contains(s []string, value string) bool {
+/*
+Contains check whether the string slice contains the given string value.
+*/
+func Contains(s []string, value string) bool {
 	for _, entry := range s {
 		if entry == value {
 			return true
