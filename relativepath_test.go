@@ -90,3 +90,18 @@ func TestRelativePathUp(t *testing.T) {
 		}
 	}
 }
+
+func TestRelativePathLastElement(t *testing.T) {
+	t.Log("Testing LastElement")
+	testElement := []testCreate{ // we can reuse testCreate for this test
+		{"/a/b", "", "b"},
+		{"a//b", "c", "c"},
+		{"/a/b/c", "d/e/f", "f"}}
+	for _, set := range testElement {
+		path := CreatePath(set.root, set.sub)
+		result := path.LastElement()
+		if result != set.want {
+			t.Error("Expected", set.want, "got", result)
+		}
+	}
+}
