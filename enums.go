@@ -96,6 +96,8 @@ const (
 	ReObject
 	/*ReModel requests the model.*/
 	ReModel
+	/*RePeer requests the connected peers peer file.*/
+	RePeer
 )
 
 func (req Request) String() string {
