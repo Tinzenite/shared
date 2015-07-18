@@ -106,6 +106,10 @@ func (r *RelativePath) Up() *RelativePath {
 	return &RelativePath{limit: r.limit, stack: r.stack[:pop]}
 }
 
+func (r *RelativePath) String() string {
+	return "Path: " + r.FullPath()
+}
+
 func (r *RelativePath) sanitize(path string) []string {
 	splitted := strings.Split(path, "/")
 	var clean []string
