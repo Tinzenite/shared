@@ -1,6 +1,9 @@
 package shared
 
-import "errors"
+import (
+	"errors"
+	"os"
+)
 
 /*
 Errors of Tinzenite.
@@ -33,6 +36,8 @@ const (
 	KEYLENGTH = 256
 	/*FILEPERMISSIONMODE used for all file operations.*/
 	FILEPERMISSIONMODE = 0777
+	/*FILEFLAGCREATEAPPEND is the flag required to create a file or append to it if it already exists.*/
+	FILEFLAGCREATEAPPEND = os.O_CREATE | os.O_RDWR | os.O_APPEND
 	/*CHUNKSIZE for hashing and encryption.*/
 	CHUNKSIZE = 8 * 1024
 )
