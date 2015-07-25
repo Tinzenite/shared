@@ -52,4 +52,5 @@ const (
 	AUTHJSON      = "auth" + ENDING
 	MODELJSON     = "model" + ENDING
 	SELFPEERJSON  = "self" + ENDING
+	BOOTJSON      = "boot" + ENDING
 )
