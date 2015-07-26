@@ -36,8 +36,6 @@ const (
 	MsgUpdate
 	/*MsgRequest is a RequestMessage.*/
 	MsgRequest
-	/*MsgModel is a ModelMessage.*/
-	MsgModel
 )
 
 func (msg MsgType) String() string {
@@ -48,8 +46,6 @@ func (msg MsgType) String() string {
 		return "update"
 	case MsgRequest:
 		return "request"
-	case MsgModel:
-		return "model"
 	default:
 		return "unknown"
 	}
