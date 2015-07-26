@@ -44,18 +44,20 @@ const (
 
 // Path constants here
 const (
-	TINZENITEDIR  = ".tinzenite"
-	TINIGNORE     = ".tinignore"
-	DIRECTORYLIST = "directory.list"
-	LOCALDIR      = "local"
-	TEMPDIR       = "temp"
-	RECEIVINGDIR  = "receiving"
-	REMOVEDIR     = "removed"
-	ORGDIR        = "org"
-	PEERSDIR      = "peers"
-	ENDING        = ".json"
-	AUTHJSON      = "auth" + ENDING
-	MODELJSON     = "model" + ENDING
-	SELFPEERJSON  = "self" + ENDING
-	BOOTJSON      = "boot" + ENDING
+	TINZENITEDIR   = ".tinzenite"
+	TINIGNORE      = ".tinignore"
+	DIRECTORYLIST  = "directory.list"
+	LOCALDIR       = "local"
+	TEMPDIR        = "temp"
+	RECEIVINGDIR   = "receiving"
+	REMOVEDIR      = "removed"
+	REMOVECHECKDIR = "check"
+	REMOVEDONEDIR  = "done"
+	ORGDIR         = "org"
+	PEERSDIR       = "peers"
+	ENDING         = ".json"
+	AUTHJSON       = "auth" + ENDING
+	MODELJSON      = "model" + ENDING
+	SELFPEERJSON   = "self" + ENDING
+	BOOTJSON       = "boot" + ENDING
 )
