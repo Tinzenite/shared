@@ -61,7 +61,9 @@ Equal checks wether the given pointer points to the same object based on pointer
 and identification. NOTE: Does not compare any other properties!
 */
 func (o *ObjectInfo) Equal(that *ObjectInfo) bool {
-	return o == that || o.Identification == that.Identification
+	return o == that ||
+		o.Identification == that.Identification ||
+		o.Content == that.Content
 }
 
 /*
