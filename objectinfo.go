@@ -20,6 +20,11 @@ type ObjectInfo struct {
 }
 
 /*
+onEach is the function that is called on every object.
+*/
+type onEach func(obj ObjectInfo)
+
+/*
 CreateObjectInfo is a TEST function for creating an object for the specified
 parameters.
 */
@@ -65,4 +70,17 @@ String returns a json representation of this object.
 func (o *ObjectInfo) String() string {
 	data, _ := json.Marshal(o)
 	return string(data)
+}
+
+/*
+ForEach is a helper function that applies the given function to the object and
+all its sub Objects.
+*/
+func (o *ObjectInfo) ForEach(f onEach) {
+	// apply to self
+	f(*o)
+	// apply to all children
+	for _, obj := range o.Objects {
+		obj.ForEach(f)
+	}
 }
