@@ -42,6 +42,18 @@ func MakeDotTinzenite(root string) error {
 }
 
 /*
+RemoveDotTinzenite directory. Specifically leaves all user files but removes all
+Tinzenite specific items.
+*/
+func RemoveDotTinzenite(path string) error {
+	if !IsTinzenite(path) {
+		return ErrNotTinzenite
+	}
+	/* TODO remove from directory list*/
+	return os.RemoveAll(path + "/" + TINZENITEDIR)
+}
+
+/*
 PrettifyDirectoryList reads the directory.list file from the user's tinzenite
 config directory and removes all invalid entries.
 */
