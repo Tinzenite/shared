@@ -61,3 +61,6 @@ const (
 	SELFPEERJSON   = "self" + ENDING
 	BOOTJSON       = "boot" + ENDING
 )
+
+// .tinignore content for .tinzenite directory
+const TINDIRIGNORE = "# DO NOT MODIFY!\n/" + LOCALDIR + "\n/" + TEMPDIR + "\n/" + RECEIVINGDIR

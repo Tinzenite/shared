@@ -9,8 +9,6 @@ import (
 	"os"
 	"os/user"
 	"strings"
-
-	"github.com/tinzenite/shared"
 )
 
 /*
@@ -33,14 +31,14 @@ including the .tinignore file required for it. The given path is the path to the
 directory (NOT the .TINZENITEDIR!).
 */
 func MakeDotTinzenite(root string) error {
-	root := root + "/" + shared.TINZENITEDIR
+	root = root + "/" + TINZENITEDIR
 	// build directory structure
-	err := shared.MakeDirectories(root, shared.ORGDIR+"/"+shared.PEERSDIR, shared.TEMPDIR, shared.REMOVEDIR, shared.LOCALDIR, shared.RECEIVINGDIR)
+	err := MakeDirectories(root, ORGDIR+"/"+PEERSDIR, TEMPDIR, REMOVEDIR, LOCALDIR, RECEIVINGDIR)
 	if err != nil {
 		return err
 	}
 	// write required .tinignore file
-	return ioutil.WriteFile(root+"/"+shared.TINIGNORE, []byte(TINDIRIGNORE), shared.FILEPERMISSIONMODE)
+	return ioutil.WriteFile(root+"/"+TINIGNORE, []byte(TINDIRIGNORE), FILEPERMISSIONMODE)
 }
 
 /*
