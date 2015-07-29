@@ -9,6 +9,8 @@ import (
 	"os"
 	"os/user"
 	"strings"
+
+	"github.com/tinzenite/shared"
 )
 
 /*
@@ -23,6 +25,22 @@ func IsTinzenite(dirpath string) bool {
 	// NOTE: object may exist but we may not have permission to access it: in that case
 	//       we consider it unaccessible and thus return false
 	return false
+}
+
+/*
+MakeDotTinzenite creates the directory structure for the .tinzenite directory
+including the .tinignore file required for it. The given path is the path to the
+directory (NOT the .TINZENITEDIR!).
+*/
+func MakeDotTinzenite(root string) error {
+	root := root + "/" + shared.TINZENITEDIR
+	// build directory structure
+	err := shared.MakeDirectories(root, shared.ORGDIR+"/"+shared.PEERSDIR, shared.TEMPDIR, shared.REMOVEDIR, shared.LOCALDIR, shared.RECEIVINGDIR)
+	if err != nil {
+		return err
+	}
+	// write required .tinignore file
+	return ioutil.WriteFile(root+"/"+shared.TINIGNORE, []byte(TINDIRIGNORE), shared.FILEPERMISSIONMODE)
 }
 
 /*
