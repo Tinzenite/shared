@@ -19,6 +19,23 @@ type Peer struct {
 }
 
 /*
+CreatePeer returns a peer object for the given parameters.
+*/
+func CreatePeer(name, address string) (*Peer, error) {
+	ident, err := NewIdentifier()
+	if err != nil {
+		return nil, err
+	}
+	return &Peer{
+		Name:           name,
+		Address:        address,
+		Protocol:       CmTox,
+		encrypted:      false,
+		Identification: ident,
+		initialized:    false}, nil
+}
+
+/*
 LoadPeers loads all peers for the given tinzenite root path.
 */
 func LoadPeers(root string) ([]*Peer, error) {
