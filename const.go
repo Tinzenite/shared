@@ -64,3 +64,6 @@ const (
 
 // .tinignore content for .tinzenite directory
 const TINDIRIGNORE = "# DO NOT MODIFY!\n/" + LOCALDIR + "\n/" + TEMPDIR + "\n/" + RECEIVINGDIR
+
+// IDMODEL is the model identification used to differentiate models from files.
+const IDMODEL = "MODEL"
