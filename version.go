@@ -53,6 +53,29 @@ func (v Version) Valid(that Version, selfid string) (Version, bool) {
 }
 
 /*
+Equal checks whether the version per id match perfectly between the two.
+*/
+func (v Version) Equal(that Version) bool {
+	// nil check
+	if that == nil {
+		return false
+	}
+	// length must be same
+	if len(v) != len(that) {
+		return false
+	}
+	// all entries must match
+	for id, value := range v {
+		thatValue, exists := that[id]
+		if !exists || thatValue != value {
+			return false
+		}
+	}
+	// if everything runs through successfully, true
+	return true
+}
+
+/*
 String representation of version.
 */
 func (v Version) String() string {
