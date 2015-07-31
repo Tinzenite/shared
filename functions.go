@@ -167,10 +167,12 @@ func MakeDirectories(root string, subdirs ...string) error {
 }
 
 /*
-FileExists checks whether a file at that location exists.
+FileExists checks whether a file at that location exists. Currently also usable
+for directories.
+
+TODO differentiate between dir and file?
 */
 func FileExists(path string) bool {
-	/*TODO differentiate between dir and file?*/
 	_, err := os.Lstat(path)
 	return err == nil
 }
