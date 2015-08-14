@@ -54,33 +54,62 @@ func RemoveDotTinzenite(path string) error {
 }
 
 /*
-PrettifyDirectoryList reads the directory.list file from the user's tinzenite
-config directory and removes all invalid entries.
+WriteDirectoryList adds the given path to the DIRECTORYLIST file. Will try to
+avoid writing the same path multiple times.
 */
-// TODO rewrite this so that it accepts a string and then applies it if valid
-//		while ensuring that the rest is valid
-func PrettifyDirectoryList() error {
+func WriteDirectoryList(path string) error {
+	filePath, err := directoryListPath()
+	if err != nil {
+		return err
+	}
+	// make dir in case that it doesn't exist yet (root path here is the directory)
+	err = MakeDirectory(filePath.RootPath())
+	if err != nil {
+		return err
+	}
+	lines, err := ReadDirectoryList()
+	if err != nil {
+		return err
+	}
+	// only add new entry if it doesn't yet exist
+	if !Contains(lines, path) {
+		lines = append(lines, path)
+		newContent := strings.Join(lines, "\n")
+		return ioutil.WriteFile(filePath.FullPath(), []byte(newContent), FILEPERMISSIONMODE)
+	}
+	// if already exists we're done
+	return nil
+}
+
+/*
+ReadDirectoryList reads all registered Tinzenite directories in the system. May
+return an empty listing if none found!
+*/
+func ReadDirectoryList() ([]string, error) {
+	filePath, err := directoryListPath()
+	if err != nil {
+		return nil, err
+	}
+	// if file doesn't exist we're done
+	if !FileExists(filePath.FullPath()) {
+		return []string{}, nil
+	}
+	bytes, err := ioutil.ReadFile(filePath.FullPath())
+	if err != nil {
+		return nil, err
+	}
+	return strings.Split(string(bytes), "\n"), nil
+}
+
+/*
+directoryListPath returns the path where the file lies.
+*/
+func directoryListPath() (*RelativePath, error) {
 	user, err := user.Current()
 	if err != nil {
-		return err
+		return nil, err
 	}
-	path := user.HomeDir + "/.config/tinzenite/" + DIRECTORYLIST
-	bytes, err := ioutil.ReadFile(path)
-	if err != nil {
-		return err
-	}
-	lines := strings.Split(string(bytes), "\n")
-	writeList := map[string]bool{}
-	for _, line := range lines {
-		if IsTinzenite(line) {
-			writeList[line] = true
-		}
-	}
-	var newContents string
-	for key := range writeList {
-		newContents += key + "\n"
-	}
-	return ioutil.WriteFile(path, []byte(newContents), FILEPERMISSIONMODE)
+	return CreatePath(user.HomeDir+"/.config/tinzenite/", DIRECTORYLIST), nil
 }
 
 /*
