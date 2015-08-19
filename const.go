@@ -9,14 +9,15 @@ import (
 Errors of Tinzenite.
 */
 var (
-	ErrUnsupported      = errors.New("feature currently unsupported")
-	ErrIsTinzenite      = errors.New("already a Tinzenite directory")
-	ErrNotTinzenite     = errors.New("path is not valid Tinzenite directory")
-	ErrNoTinIgnore      = errors.New("no .tinignore file found")
-	ErrUntracked        = errors.New("object is not tracked in the model")
-	ErrNilInternalState = errors.New("internal state has illegal NIL values")
-	ErrConflict         = errors.New("conflict, can not apply")
-	ErrIllegalFileState = errors.New("illegal file state detected")
+	ErrIllegalParameters = errors.New("illegal parameters given")
+	ErrUnsupported       = errors.New("feature currently unsupported")
+	ErrIsTinzenite       = errors.New("already a Tinzenite directory")
+	ErrNotTinzenite      = errors.New("path is not valid Tinzenite directory")
+	ErrNoTinIgnore       = errors.New("no .tinignore file found")
+	ErrUntracked         = errors.New("object is not tracked in the model")
+	ErrNilInternalState  = errors.New("internal state has illegal NIL values")
+	ErrConflict          = errors.New("conflict, can not apply")
+	ErrIllegalFileState  = errors.New("illegal file state detected")
 )
 
 /*
