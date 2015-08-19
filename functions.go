@@ -217,14 +217,3 @@ func Contains(s []string, value string) bool {
 	}
 	return false
 }
-
-/*
-CountFiles within a directory given by path.
-*/
-func CountFiles(path string) (int, error) {
-	files, err := ioutil.ReadDir(path)
-	if err != nil {
-		return -1, err
-	}
-	return len(files), nil
-}
