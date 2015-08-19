@@ -22,7 +22,9 @@ func CreatePathRoot(root string) *RelativePath {
 }
 
 /*
-CreatePath creates a path directly with a subpath selected.
+CreatePath creates a path directly with a subpath selected. Note that the subpath
+is NOT checked if it is relative or absolute: to do that use CreatePathRoot
+directly followed by Apply, which will check.
 */
 func CreatePath(root string, subpath string) *RelativePath {
 	r := CreatePathRoot(root)
