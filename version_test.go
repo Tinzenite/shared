@@ -8,6 +8,11 @@ type testEqual struct {
 	want bool
 }
 
+type testMax struct {
+	ver  Version
+	want int
+}
+
 type testIncrease struct {
 	before Version
 	id     string
@@ -43,6 +48,23 @@ func TestVersion_Equal(t *testing.T) {
 		}
 		if oneEqualTwo != test.want {
 			t.Error("Expected", test.want, "got", oneEqualTwo, "for", test.one, test.two)
+		}
+	}
+}
+
+func TestVersion_Max(t *testing.T) {
+	testMax := []testMax{
+		{Version{}, 0},
+		{Version{"a": 1}, 1},
+		{Version{"a": 1, "b": 1}, 1},
+		{Version{"a": -2, "b": 1}, 1},
+		{Version{"a": 2, "b": 1}, 2},
+		{Version{"a": 2, "b": 1, "c": 42}, 42},
+		{Version{"a": -1}, 0}}
+	for _, test := range testMax {
+		max := test.ver.Max()
+		if max != test.want {
+			t.Error("Expected", test.want, "got", max)
 		}
 	}
 }
