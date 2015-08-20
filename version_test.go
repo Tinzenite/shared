@@ -19,6 +19,13 @@ type testIncrease struct {
 	want   Version
 }
 
+type testValid struct {
+	local  Version
+	selfid string
+	remote Version
+	want   bool
+}
+
 func TestVersion_Equal(t *testing.T) {
 	testEquals := []testEqual{
 		// empty
@@ -70,17 +77,45 @@ func TestVersion_Max(t *testing.T) {
 }
 
 func TestVersion_Increase(t *testing.T) {
-	testIncrease := []testIncrease{
+	testIncreases := []testIncrease{
 		{Version{}, "a", Version{"a": 1}},
 		{Version{"a": 1}, "a", Version{"a": 2}},
 		{Version{"b": 12}, "a", Version{"a": 13, "b": 12}},
 		{Version{"a": 11, "b": 12}, "a", Version{"a": 13, "b": 12}},
 		{Version{"c": 42, "b": 12}, "a", Version{"a": 43, "b": 12, "c": 42}}}
-	for _, test := range testIncrease {
+	for _, test := range testIncreases {
 		ver := test.before
 		ver.Increase(test.id)
 		if !ver.Equal(test.want) {
 			t.Error("Expected", test.want, "got", ver)
+		}
+	}
+}
+
+func TestVersion_Valid(t *testing.T) {
+	testValids := []testValid{
+		// empty OP
+		{Version{}, "a", Version{}, true},
+		// no OP
+		{Version{"a": 1, "b": 2}, "a", Version{"a": 1, "b": 2}, true},
+		// legal update remote
+		{Version{"a": 1, "b": 2}, "a", Version{"a": 1, "b": 3}, true},
+		// remote has higher version of self (shouldn't happen in real but let's be sure)
+		{Version{"a": 1, "b": 2}, "a", Version{"a": 2, "b": 3}, false},
+		// remote update to unknown local
+		{Version{}, "a", Version{"b": 3}, true},
+		// local version ahead of no Op from remote
+		{Version{"a": 1, "b": 2, "c": 4}, "a", Version{"a": 1, "b": 2}, false},
+		// remote tries update
+		{Version{"a": 1, "b": 2, "c": 4}, "a", Version{"a": 1, "b": 3}, false},
+		// remote tries legal value but without knowing of all peer version (version c is unknown to remote)
+		{Version{"a": 1, "b": 2, "c": 4}, "a", Version{"a": 1, "b": 5}, false},
+		// anti bug test
+		{Version{"a": 2}, "a", Version{"b": 3}, false}}
+	for _, test := range testValids {
+		got := test.local.Valid(test.remote, test.selfid)
+		if got != test.want {
+			t.Error("Expected", test.want, "got", got, "on", test)
 		}
 	}
 }

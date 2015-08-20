@@ -2,7 +2,6 @@ package shared
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 )
@@ -38,19 +37,38 @@ Valid checks whether the version can be automerged or whether manual resolution
 is required.
 */
 func (v Version) Valid(that Version, selfid string) bool {
-	if v.Max() > that.Max() {
-		// local version is ahead
-		log.Println("Local version is ahead of remote version!")
+	// special handling for selfid peer: must always be exactly the same
+	localValue, localExist := v[selfid]
+	remotValue, remotExist := that[selfid]
+	// if it doesn't exist locally it may not exist on the other side
+	if localExist != remotExist {
+		// log.Println("Version: unsymmetric self peer existance!", v, that)
 		return false
 	}
-	// if local changes don't even exist no need to check the following
-	_, ok := v[selfid]
-	if ok && v[selfid] != that[selfid] {
-		// this means local version was changed without the other peer realizing
-		log.Println("Merge conflict! Local file has since changed.")
+	// if it exists we must only make sure that all other values are ok
+	if localExist && remotExist && localValue != remotValue {
+		// log.Println("Version: wrong value for self <"+selfid+">!", v, that)
 		return false
 	}
-	// otherwise we can update
+	// basically we need to guarantee that the other version has all updates we are aware of
+	for localPeer, localValue := range v {
+		// ignore selfid since we handled that before
+		if localPeer == selfid {
+			continue
+		}
+		thatValue, exists := that[localPeer]
+		// make sure all peers we know of is known by the other version
+		if !exists {
+			// log.Println("Version: missing update from <"+localPeer+">!", v, that)
+			return false
+		}
+		// and if it knows of a peer, the version must be at least equal (may be higher in case we missed something)
+		if localValue > thatValue {
+			// log.Println("Version: missing updates from <"+localPeer+">!", v, that)
+			return false
+		}
+	}
+	// if we reach this all values are legal
 	return true
 }
 
