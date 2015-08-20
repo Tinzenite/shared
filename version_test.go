@@ -111,7 +111,12 @@ func TestVersion_Valid(t *testing.T) {
 		// remote tries legal value but without knowing of all peer version (version c is unknown to remote)
 		{Version{"a": 1, "b": 2, "c": 4}, "a", Version{"a": 1, "b": 5}, false},
 		// anti bug test
-		{Version{"a": 2}, "a", Version{"b": 3}, false}}
+		{Version{"a": 2}, "a", Version{"b": 3}, false},
+		// should be false because it means the same object was created on two peers
+		{Version{"a": 0}, "a", Version{"b": 0}, false},
+		// another anti bug test
+		{Version{"b": 2}, "a", Version{"a": 2, "b": 3}, false},
+		{Version{"a": 1, "b": 2}, "a", Version{"b": 3}, false}}
 	for _, test := range testValids {
 		got := test.local.Valid(test.remote, test.selfid)
 		if got != test.want {
