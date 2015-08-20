@@ -8,6 +8,12 @@ type testEqual struct {
 	want bool
 }
 
+type testIncrease struct {
+	before Version
+	id     string
+	want   Version
+}
+
 func TestVersion_Equal(t *testing.T) {
 	testEquals := []testEqual{
 		// empty
@@ -42,7 +48,17 @@ func TestVersion_Equal(t *testing.T) {
 }
 
 func TestVersion_Increase(t *testing.T) {
-	t.SkipNow()
-	version := Version{}
-	version.Increase("a")
+	testIncrease := []testIncrease{
+		{Version{}, "a", Version{"a": 1}},
+		{Version{"a": 1}, "a", Version{"a": 2}},
+		{Version{"b": 12}, "a", Version{"a": 13, "b": 12}},
+		{Version{"a": 11, "b": 12}, "a", Version{"a": 13, "b": 12}},
+		{Version{"c": 42, "b": 12}, "a", Version{"a": 43, "b": 12, "c": 42}}}
+	for _, test := range testIncrease {
+		ver := test.before
+		ver.Increase(test.id)
+		if !ver.Equal(test.want) {
+			t.Error("Expected", test.want, "got", ver)
+		}
+	}
 }

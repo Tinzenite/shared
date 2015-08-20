@@ -3,6 +3,8 @@ package shared
 import (
 	"fmt"
 	"log"
+	"sort"
+	"strings"
 )
 
 /*
@@ -80,8 +82,15 @@ String representation of version.
 */
 func (v Version) String() string {
 	var output string
+	var values []string
 	for key, value := range v {
-		output += fmt.Sprintf("%s: %d\n", key, value)
+		values = append(values, fmt.Sprintf("[%s:%d]", key, value))
 	}
+	// sort values for easy reading
+	sortable := SortableString(values)
+	sort.Sort(sortable)
+	values = []string(sortable)
+	// add identifier
+	output = "Version{" + strings.Join(values, ",") + "}"
 	return output
 }
