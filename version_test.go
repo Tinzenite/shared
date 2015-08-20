@@ -113,7 +113,7 @@ func TestVersion_Valid(t *testing.T) {
 		// anti bug test
 		{Version{"a": 2}, "a", Version{"b": 3}, false},
 		// should be false because it means the same object was created on two peers
-		{Version{"a": 0}, "a", Version{"b": 0}, false},
+		{Version{"a": 1}, "a", Version{"b": 1}, false},
 		// another anti bug test
 		{Version{"b": 2}, "a", Version{"a": 2, "b": 3}, false},
 		{Version{"a": 1, "b": 2}, "a", Version{"b": 3}, false},

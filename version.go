@@ -2,14 +2,22 @@ package shared
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strings"
 )
 
 /*
-Version implements a vector clock.
+Version implements a vector clock. The value of zero should never turn up.
 */
 type Version map[string]int
+
+/*
+CreateVersion returns a new Version object
+*/
+func CreateVersion() Version {
+	return Version{}
+}
 
 /*
 Increase the version for the given peer based on the already existing versions.
@@ -42,7 +50,7 @@ func (v Version) Valid(that Version, selfid string) bool {
 	remotValue, remotExist := that[selfid]
 	// selfid must either not exist or exist in BOTH versions – mixing means trouble
 	if localExist != remotExist {
-		// log.Println("Version: unsymmetric self existance of <"+selfid+">!", v, that)
+		log.Println("Version: unsymmetric self existance of <"+selfid+">!", v, that)
 		return false
 	}
 	// if it exists we must only make sure that all other values are ok
@@ -112,4 +120,11 @@ func (v Version) String() string {
 	// add identifier
 	output = "Version{" + strings.Join(values, ",") + "}"
 	return output
+}
+
+/*
+IsEmpty returns whether any entries have been made in this version.
+*/
+func (v Version) IsEmpty() bool {
+	return len(v) == 0
 }

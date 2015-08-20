@@ -52,7 +52,7 @@ func CreateObjectInfo(root string, subpath string, selfid string) (*ObjectInfo, 
 		Name:           path.LastElement(),
 		Path:           path.SubPath(),
 		Shadow:         false,
-		Version:        Version{},
+		Version:        CreateVersion(),
 		Content:        hash}, nil
 }
 
