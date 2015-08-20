@@ -22,8 +22,7 @@ type testUp struct {
 	want   string
 }
 
-func TestRelativePathCreate(t *testing.T) {
-	t.Log("Testing CreatePathRoot")
+func Test_CreatePathRoot(t *testing.T) {
 	testCreateRootPath := []testCreate{
 		{"///a///b  c/d", "", "/a/b  c/d"},
 		{"", "", "/"},
@@ -36,7 +35,8 @@ func TestRelativePathCreate(t *testing.T) {
 			t.Error("Expected", set.want, "got", result)
 		}
 	}
-	t.Log("Testing CreatePath")
+}
+func Test_CreatePath(t *testing.T) {
 	testCreatePath := []testCreate{
 		{"/a", "b", "/a/b"},
 		{"/a/b", "c/d", "/a/b/c/d"},
@@ -54,8 +54,7 @@ func TestRelativePathCreate(t *testing.T) {
 	}
 }
 
-func TestRelativePathApply(t *testing.T) {
-	t.Log("Testing Apply")
+func TestRelativePath_Apply(t *testing.T) {
 	testApply := []testApply{
 		{"/a", "b", "/a/b/c", "/a/b/c"},
 		{"/a/b", "c/d", "e/f", "/a/b/e/f"},
@@ -72,8 +71,7 @@ func TestRelativePathApply(t *testing.T) {
 	}
 }
 
-func TestRelativePathUp(t *testing.T) {
-	t.Log("Testing Up")
+func TestRelativePath_Up(t *testing.T) {
 	testUp := []testUp{
 		{"root", "sub", 4, "/root"},
 		{"/a/b/c/d", "e//f////g/", 2, "/a/b/c/d/e"},
@@ -91,8 +89,7 @@ func TestRelativePathUp(t *testing.T) {
 	}
 }
 
-func TestRelativePathLastElement(t *testing.T) {
-	t.Log("Testing LastElement")
+func TestRelativePath_LastElement(t *testing.T) {
 	testElement := []testCreate{ // we can reuse testCreate for this test
 		{"/a/b", "", "b"},
 		{"a//b", "c", "c"},
