@@ -2,7 +2,6 @@ package shared
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 )
@@ -41,14 +40,14 @@ func (v Version) Valid(that Version, selfid string) bool {
 	// special handling for selfid peer: must always be exactly the same
 	localValue, localExist := v[selfid]
 	remotValue, remotExist := that[selfid]
-	// if it doesn't exist locally it may not exist on the other side
-	if !localExist && remotExist {
-		log.Println("Version: unsymmetric self existance of <"+selfid+">!", v, that)
+	// selfid must either not exist or exist in BOTH versions – mixing means trouble
+	if localExist != remotExist {
+		// log.Println("Version: unsymmetric self existance of <"+selfid+">!", v, that)
 		return false
 	}
 	// if it exists we must only make sure that all other values are ok
 	if localExist && remotExist && localValue != remotValue {
-		log.Println("Version: wrong value for self <"+selfid+">!", v, that)
+		// log.Println("Version: wrong value for self <"+selfid+">!", v, that)
 		return false
 	}
 	// basically we need to guarantee that the other version has all updates we are aware of
@@ -60,33 +59,17 @@ func (v Version) Valid(that Version, selfid string) bool {
 		thatValue, exists := that[localPeer]
 		// make sure all peers we know of is known by the other version
 		if !exists {
-			log.Println("Version: missing update from <"+localPeer+">!", v, that)
+			// log.Println("Version: missing update from <"+localPeer+">!", v, that)
 			return false
 		}
 		// and if it knows of a peer, the version must be at least equal (may be higher in case we missed something)
 		if localValue > thatValue {
-			log.Println("Version: missing updates from <"+localPeer+">!", v, that)
+			// log.Println("Version: missing other updates from <"+localPeer+">!", v, that)
 			return false
 		}
 	}
+	// log.Println("Ok", v, that)
 	// if we reach this all values are legal
-	return true
-}
-
-/*
-Merge another version with this one. NOTE that it will only merge if listed peers
-exist in v XOR that. The return value signifies whether that is the case - if
-false, no changes to the version are merged.
-*/
-func (v Version) Merge(that Version) bool {
-	for peer, value := range that {
-		_, exist := v[peer]
-		if exist {
-			// log.Println("Version: merge failed because peer is in both versions!")
-			return false
-		}
-		v[peer] = value
-	}
 	return true
 }
 

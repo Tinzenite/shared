@@ -116,7 +116,9 @@ func TestVersion_Valid(t *testing.T) {
 		{Version{"a": 0}, "a", Version{"b": 0}, false},
 		// another anti bug test
 		{Version{"b": 2}, "a", Version{"a": 2, "b": 3}, false},
-		{Version{"a": 1, "b": 2}, "a", Version{"b": 3}, false}}
+		{Version{"a": 1, "b": 2}, "a", Version{"b": 3}, false},
+		// test for missing other updates
+		{Version{"a": 1, "b": 2, "c": 4}, "a", Version{"b": 3}, false}}
 	for _, test := range testValids {
 		got := test.local.Valid(test.remote, test.selfid)
 		if got != test.want {
