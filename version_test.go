@@ -100,8 +100,9 @@ func TestVersion_Valid(t *testing.T) {
 		{Version{"a": 1, "b": 2}, "a", Version{"a": 1, "b": 2}, true},
 		// legal update remote
 		{Version{"a": 1, "b": 2}, "a", Version{"a": 1, "b": 3}, true},
-		// remote has higher version of self (shouldn't happen in real but let's be sure)
-		{Version{"a": 1, "b": 2}, "a", Version{"a": 2, "b": 3}, false},
+		// remote has higher version of self is OK because this may mean we've lost a version
+		// NOTE: this essentially means that we trust external updates
+		{Version{"a": 1, "b": 2}, "a", Version{"a": 2, "b": 3}, true},
 		// remote update to unknown local
 		{Version{}, "a", Version{"b": 3}, true},
 		// local version ahead of no Op from remote
@@ -114,8 +115,8 @@ func TestVersion_Valid(t *testing.T) {
 		{Version{"a": 2}, "a", Version{"b": 3}, false},
 		// should be false because it means the same object was created on two peers
 		{Version{"a": 1}, "a", Version{"b": 1}, false},
-		// another anti bug test
-		{Version{"b": 2}, "a", Version{"a": 2, "b": 3}, false},
+		// remote has higher version of self is OK because see above
+		{Version{"b": 2}, "a", Version{"a": 2, "b": 3}, true},
 		{Version{"a": 1, "b": 2}, "a", Version{"b": 3}, false},
 		// test for missing other updates
 		{Version{"a": 1, "b": 2, "c": 4}, "a", Version{"b": 3}, false}}

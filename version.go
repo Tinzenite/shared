@@ -2,7 +2,6 @@ package shared
 
 import (
 	"fmt"
-	"log"
 	"sort"
 	"strings"
 )
@@ -45,39 +44,22 @@ Valid checks whether the version can be automerged or whether manual resolution
 is required.
 */
 func (v Version) Valid(that Version, selfid string) bool {
-	// special handling for selfid peer: must always be exactly the same
-	localValue, localExist := v[selfid]
-	remotValue, remotExist := that[selfid]
-	// selfid must either not exist or exist in BOTH versions – mixing means trouble
-	if localExist != remotExist {
-		log.Println("Version: unsymmetric self existance of <"+selfid+">!", v, that)
-		return false
-	}
-	// if it exists we must only make sure that all other values are ok
-	if localExist && remotExist && localValue != remotValue {
-		// log.Println("Version: wrong value for self <"+selfid+">!", v, that)
-		return false
-	}
-	// basically we need to guarantee that the other version has all updates we are aware of
-	for localPeer, localValue := range v {
-		// ignore selfid since we handled that before
-		if localPeer == selfid {
-			continue
-		}
-		thatValue, exists := that[localPeer]
-		// make sure all peers we know of is known by the other version
-		if !exists {
-			// log.Println("Version: missing update from <"+localPeer+">!", v, that)
+	// for every value this knows of...
+	for thisPeer, thisValue := range v {
+		// ... that must have an entry (otherwise missing updates)
+		thatValue, thatExists := that[thisPeer]
+		if !thatExists {
+			// log.Println("Version: failed knowledge check:", v, that)
 			return false
 		}
-		// and if it knows of a peer, the version must be at least equal (may be higher in case we missed something)
-		if localValue > thatValue {
-			// log.Println("Version: missing other updates from <"+localPeer+">!", v, that)
+		// and that's value must be => than the local one
+		if !(thatValue >= thisValue) {
+			// log.Println("Version: failed value check:", v, that)
 			return false
 		}
+		// that's it! if those two are right the version is valid!
 	}
-	// log.Println("Ok", v, that)
-	// if we reach this all values are legal
+	// log.Println("Version: legal:", v, that)
 	return true
 }
 
