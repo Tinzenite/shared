@@ -2,6 +2,7 @@ package shared
 
 import (
 	"fmt"
+	"log"
 	"sort"
 	"strings"
 )
@@ -42,6 +43,9 @@ func (v Version) Max() int {
 /*
 Valid checks whether the version can be automerged or whether manual resolution
 is required.
+
+NOTE: The selfid value is a special case and ignored, so long as its knowledge
+is correct. The value is however updated if the other version has a higher value.
 */
 func (v Version) Valid(that Version, selfid string) bool {
 	// for every value this knows of...
@@ -51,6 +55,17 @@ func (v Version) Valid(that Version, selfid string) bool {
 		if !thatExists {
 			// log.Println("Version: failed knowledge check:", v, that)
 			return false
+		}
+		// See note.
+		if thisPeer == selfid {
+			// check if we need to update this version
+			if thatValue > thisValue {
+				// update self value
+				log.Println("Version: WARNING: accepting update to self from other version!", v, that)
+				v[selfid] = thatValue
+			}
+			// in any case do not further check the selfpeer
+			continue
 		}
 		// and that's value must be => than the local one
 		if !(thatValue >= thisValue) {
