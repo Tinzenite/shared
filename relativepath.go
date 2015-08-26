@@ -84,6 +84,21 @@ func (r *RelativePath) Apply(path string) *RelativePath {
 }
 
 /*
+RenameLastElement overwrites the last element completely with the given value
+and returns the corresponding new RelativePath.
+*/
+func (r *RelativePath) RenameLastElement(value string) *RelativePath {
+	// make sure that we're not renaming the root path
+	// also: value must be valid single element, so no '/'!
+	if r.Depth() == r.limit || strings.Contains(value, "/") {
+		return CreatePath(r.RootPath(), r.SubPath())
+	}
+	relPath := CreatePath(r.RootPath(), r.SubPath())
+	relPath.stack[len(relPath.stack)-1] = value
+	return relPath
+}
+
+/*
 Depth is the amount of elements contained in the full path.
 */
 func (r *RelativePath) Depth() int {

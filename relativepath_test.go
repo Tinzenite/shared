@@ -22,6 +22,13 @@ type testUp struct {
 	want   string
 }
 
+type testRename struct {
+	root  string
+	sub   string
+	value string
+	want  string
+}
+
 func Test_CreatePathRoot(t *testing.T) {
 	testCreateRootPath := []testCreate{
 		{"///a///b  c/d", "", "/a/b  c/d"},
@@ -98,6 +105,21 @@ func TestRelativePath_LastElement(t *testing.T) {
 		path := CreatePath(set.root, set.sub)
 		result := path.LastElement()
 		if result != set.want {
+			t.Error("Expected", set.want, "got", result)
+		}
+	}
+}
+
+func TestRelativePath_RenameLastElement(t *testing.T) {
+	testElement := []testRename{
+		{"/a/b", "", "b", "/a/b"},
+		{"/a/b", "c/d", "e", "/a/b/c/e"},
+		{"/a/", "b", "c/d", "/a/b"},
+		{"/a/b///c", "ddd", "d", "/a/b/c/d"}}
+	for _, set := range testElement {
+		path := CreatePath(set.root, set.sub)
+		result := path.RenameLastElement(set.value)
+		if result.FullPath() != set.want {
 			t.Error("Expected", set.want, "got", result)
 		}
 	}
