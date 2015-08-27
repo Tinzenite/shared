@@ -33,7 +33,7 @@ directory (NOT the .TINZENITEDIR!).
 func MakeDotTinzenite(root string) error {
 	root = root + "/" + TINZENITEDIR
 	// build directory structure
-	err := MakeDirectories(root, ORGDIR+"/"+PEERSDIR, TEMPDIR, REMOVEDIR, LOCALDIR, RECEIVINGDIR)
+	err := MakeDirectories(root, ORGDIR+"/"+PEERSDIR, TEMPDIR, REMOVEDIR, LOCALDIR, LOCALDIR+"/"+REMOVESTOREDIR, RECEIVINGDIR)
 	if err != nil {
 		return err
 	}

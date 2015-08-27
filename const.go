@@ -54,6 +54,7 @@ const (
 	REMOVEDIR      = "removed"
 	REMOVECHECKDIR = "check"
 	REMOVEDONEDIR  = "done"
+	REMOVESTOREDIR = "rmstore"
 	ORGDIR         = "org"
 	PEERSDIR       = "peers"
 	ENDING         = ".json"
