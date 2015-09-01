@@ -41,6 +41,25 @@ func (v Version) Max() int {
 }
 
 /*
+Includes returns true if the version contains all knowledge and version of the
+given version. Method is intended to allow ordering of versions.
+*/
+func (v Version) Includes(that Version) bool {
+	for thatPeer, thatValue := range that {
+		// must exist locally
+		thisValue, thisExists := v[thatPeer]
+		if !thisExists {
+			return false
+		}
+		// and local must be equal or higher
+		if thisValue < thatValue {
+			return false
+		}
+	}
+	return true
+}
+
+/*
 Valid checks whether the version can be automerged or whether manual resolution
 is required.
 

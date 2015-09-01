@@ -76,6 +76,27 @@ func TestVersion_Max(t *testing.T) {
 	}
 }
 
+func TestVersion_Includes(t *testing.T) {
+	testHigher := []testEqual{
+		{Version{}, Version{}, true},
+		{Version{"a": 1}, Version{}, true},
+		{Version{}, Version{"a": 1}, false},
+		{Version{"a": 1}, Version{"a": 1}, true},
+		{Version{"a": 1, "b": 2}, Version{"a": 1}, true},
+		{Version{"a": 1}, Version{"a": 1, "b": 2}, false},
+		{Version{"a": 22, "b": 23}, Version{"a": 22, "b": 16}, true},
+		{Version{"a": 22, "b": 16}, Version{"a": 22, "b": 23}, false},
+		{Version{"a": 2}, Version{"a": 1}, true},
+		{Version{"a": 1}, Version{"a": 2}, false}}
+	for _, test := range testHigher {
+		// no symmetry test because assymmetric
+		value := test.one.Includes(test.two)
+		if value != test.want {
+			t.Error("Expected", test.want, "got", value, "for", test.one, test.two)
+		}
+	}
+}
+
 func TestVersion_Increase(t *testing.T) {
 	testIncreases := []testIncrease{
 		{Version{}, "a", Version{"a": 1}},
