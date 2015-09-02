@@ -67,9 +67,9 @@ func (o *ObjectInfo) Equal(that *ObjectInfo) bool {
 }
 
 /*
-String returns a json representation of this object.
+JSON returns a json representation of this object.
 */
-func (o *ObjectInfo) String() string {
+func (o *ObjectInfo) JSON() string {
 	data, _ := json.Marshal(o)
 	return string(data)
 }
@@ -85,4 +85,9 @@ func (o *ObjectInfo) ForEach(f onEach) {
 	for _, obj := range o.Objects {
 		obj.ForEach(f)
 	}
+}
+
+func (o *ObjectInfo) String() string {
+	// TODO correct this
+	return o.JSON()
 }

@@ -34,9 +34,17 @@ func CreateUpdateMessage(op Operation, obj ObjectInfo) UpdateMessage {
 		Object:    obj}
 }
 
-func (um *UpdateMessage) String() string {
+/*
+JSON representation of this message.
+*/
+func (um *UpdateMessage) JSON() string {
 	data, _ := json.Marshal(um)
 	return string(data)
+}
+
+func (um *UpdateMessage) String() string {
+	return "UpdateMessage{Type:" + um.Type.String() + ",Operation:" +
+		um.Operation.String() + "," + um.Object.String() + "}"
 }
 
 /*
@@ -59,7 +67,15 @@ func CreateRequestMessage(req Request, identification string) RequestMessage {
 		Identification: identification}
 }
 
-func (rm *RequestMessage) String() string {
+/*
+JSON representation of this message.
+*/
+func (rm *RequestMessage) JSON() string {
 	data, _ := json.Marshal(rm)
 	return string(data)
+}
+
+func (rm *RequestMessage) String() string {
+	return "RequestMessage{Type:" + rm.Type.String() + ",Request:" +
+		rm.Request.String() + ",Identification:" + rm.Identification + "}"
 }
