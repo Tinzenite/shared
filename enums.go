@@ -36,6 +36,8 @@ const (
 	MsgUpdate
 	/*MsgRequest is a RequestMessage.*/
 	MsgRequest
+	/*MsgNotify is a NotifyMessage.*/
+	MsgNotify
 )
 
 func (msg MsgType) String() string {
@@ -46,6 +48,8 @@ func (msg MsgType) String() string {
 		return "update"
 	case MsgRequest:
 		return "request"
+	case MsgNotify:
+		return "notify"
 	default:
 		return "unknown"
 	}
