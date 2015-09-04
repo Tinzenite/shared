@@ -196,6 +196,24 @@ func MakeDirectories(root string, subdirs ...string) error {
 }
 
 /*
+RemoveDirContents removes all files within the given path, leaving the directory
+as is.
+*/
+func RemoveDirContents(path string) error {
+	allStat, err := ioutil.ReadDir(path)
+	if err != nil {
+		return err
+	}
+	for _, stat := range allStat {
+		err := os.Remove(path + "/" + stat.Name())
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+/*
 FileExists checks whether a file at that location exists. Currently also usable
 for directories.
 
