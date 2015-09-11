@@ -5,6 +5,7 @@ import (
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
+	"errors"
 	"io/ioutil"
 	"os"
 	"os/user"
@@ -90,8 +91,9 @@ func ReadDirectoryList() ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	// if file doesn't exist we're done
-	if !FileExists(filePath.FullPath()) {
+	exists, err := FileExists(filePath.FullPath())
+	// if file doesn't exist / error happened we're done
+	if !exists || err != nil {
 		return []string{}, nil
 	}
 	bytes, err := ioutil.ReadFile(filePath.FullPath())
@@ -214,14 +216,81 @@ func RemoveDirContents(path string) error {
 }
 
 /*
-FileExists checks whether a file at that location exists. Currently also usable
-for directories.
-
-TODO differentiate between dir and file?
+FileExists checks whether a file at that location exists.
 */
-func FileExists(path string) bool {
-	_, err := os.Lstat(path)
-	return err == nil
+func FileExists(path string) (bool, error) {
+	stat, err := os.Lstat(path)
+	if err == os.ErrNotExist {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	if stat.IsDir() {
+		return false, errors.New("path is not a file")
+	}
+	return true, nil
+}
+
+/*
+DirectoryExists checks whether a directory at that location exists.
+*/
+func DirectoryExists(path string) (bool, error) {
+	stat, err := os.Lstat(path)
+	if err == os.ErrNotExist {
+		return false, nil
+	}
+	if err != nil {
+		return false, err
+	}
+	if !stat.IsDir() {
+		return false, errors.New("path is not a directory")
+	}
+	return true, nil
+}
+
+/*
+ObjectExists combines FileExists and DirectoryExists.
+*/
+func ObjectExists(path string) (bool, error) {
+	file, errFile := FileExists(path)
+	dir, errDir := DirectoryExists(path)
+	exists := dir || file
+	// if either exists we can ignore all errors as we satisified the query
+	if exists {
+		return true, nil
+	}
+	// build unified error
+	text := "Errors: "
+	if errFile != nil {
+		text += "FileExists: " + errFile.Error() + " "
+	}
+	if errDir != nil {
+		text += "DirectoryExists: " + errDir.Error()
+	}
+	// return errors
+	return false, errors.New(text)
+}
+
+/*
+IsDirectoryEmpty checks whether the given directory is empty.
+*/
+func IsDirectoryEmpty(path string) (bool, error) {
+	isDir, err := DirectoryExists(path)
+	if err != nil {
+		return false, err
+	}
+	if !isDir {
+		return false, errors.New("directory doesn't exist")
+	}
+	subFiles, err := ioutil.ReadDir(path)
+	if err != nil {
+		return false, err
+	}
+	if len(subFiles) > 0 {
+		return false, nil
+	}
+	return true, nil
 }
 
 /*
