@@ -256,6 +256,10 @@ func ObjectExists(path string) (bool, error) {
 	if exists {
 		return true, nil
 	}
+	// false case without errors
+	if errFile == nil && errDir == nil {
+		return false, nil
+	}
 	// build unified error
 	text := "Errors: "
 	if errFile != nil {

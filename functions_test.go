@@ -60,6 +60,43 @@ func Test_DirectoryExists(t *testing.T) {
 	}
 }
 
+func Test_ObjectExists(t *testing.T) {
+	// make dir for tests so that we can easily clean up afterwards
+	root := makeTempDir("", "root")
+	defer removeTemp(root)
+	// test true
+	tempFile := makeTempFile(root, "file")
+	tempDir := makeTempDir(root, "dir")
+	// we expect true and no error
+	exists, err := ObjectExists(tempFile)
+	if exists == false || err != nil {
+		t.Error("Expected file to exist, got", exists, "or", err)
+	}
+	exists, err = ObjectExists(tempDir)
+	if exists == false || err != nil {
+		t.Error("Expected dir to exist, got", exists, "or", err)
+	}
+	// test false
+	err = os.Remove(tempDir)
+	if err != nil {
+		t.Fatal("Failed test setup", err)
+	}
+	err = os.Remove(tempFile)
+	if err != nil {
+		t.Fatal("Failed test setup", err)
+	}
+	// we expect false and no error
+	exists, err = ObjectExists(tempFile)
+	if exists == true || err != nil {
+		t.Error("Expected file to NOT exist, got", exists, "or", err)
+	}
+	exists, err = ObjectExists(tempDir)
+	if exists == true || err != nil {
+		t.Error("Expected dir to NOT exist, got", exists, "or", err)
+	}
+	// missing: error case
+}
+
 func makeTempFile(path, name string) string {
 	file, _ := ioutil.TempFile(path, name)
 	return file.Name()
