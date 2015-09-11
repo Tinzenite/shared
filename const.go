@@ -64,6 +64,18 @@ const (
 	BOOTJSON       = "boot" + ENDING
 )
 
+/*
+Special path sets here. Mostly used to make writing to sub directories easier.
+
+TODO aren't these all for core? Then move them there.
+*/
+const (
+	STOREPEERDIR    = TINZENITEDIR + "/" + ORGDIR + "/" + PEERSDIR
+	STORETOXDUMPDIR = TINZENITEDIR + "/" + LOCALDIR
+	STOREAUTHDIR    = TINZENITEDIR + "/" + ORGDIR
+	STOREMODELDIR   = TINZENITEDIR + "/" + LOCALDIR
+)
+
 // .tinignore content for .tinzenite directory
 const TINDIRIGNORE = "# DO NOT MODIFY!\n/" + LOCALDIR + "\n/" + TEMPDIR + "\n/" + RECEIVINGDIR
 

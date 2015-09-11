@@ -63,13 +63,16 @@ func LoadPeers(root string) ([]*Peer, error) {
 }
 
 /*
-Store JSON representation of peer.
+StoreTo the given path a JSON representation of peer.
 */
-func (p *Peer) Store(root string) error {
+func (p *Peer) StoreTo(path string) error {
+	// prepare data to write
 	data, err := json.MarshalIndent(p, "", "  ")
 	if err != nil {
 		return err
 	}
-	path := root + "/" + TINZENITEDIR + "/" + ORGDIR + "/" + PEERSDIR + "/" + p.Identification + ENDING
+	// add file name and ending
+	path = path + "/" + p.Identification + ENDING
+	// write
 	return ioutil.WriteFile(path, data, FILEPERMISSIONMODE)
 }

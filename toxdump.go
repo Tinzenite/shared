@@ -15,10 +15,11 @@ type ToxPeerDump struct {
 }
 
 /*
-LoadToxDump loads the toxPeerDump file for the local Tinzenite directory.
+LoadToxDumpFrom loads the toxPeerDump file from the given path.
 */
-func LoadToxDump(root string) (*ToxPeerDump, error) {
-	data, err := ioutil.ReadFile(root + "/" + TINZENITEDIR + "/" + LOCALDIR + "/" + SELFPEERJSON)
+func LoadToxDumpFrom(path string) (*ToxPeerDump, error) {
+	path = path + "/" + SELFPEERJSON
+	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
@@ -31,12 +32,14 @@ func LoadToxDump(root string) (*ToxPeerDump, error) {
 }
 
 /*
-Store the toxPeerDump to the directory.
+StoreTo the toxPeerDump to the given path.
 */
-func (t *ToxPeerDump) Store(root string) error {
+func (t *ToxPeerDump) StoreTo(path string) error {
+	// prepare data to write
 	data, err := json.MarshalIndent(t, "", "  ")
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(root+"/"+TINZENITEDIR+"/"+LOCALDIR+"/"+SELFPEERJSON, data, FILEPERMISSIONMODE)
+	path = path + "/" + SELFPEERJSON
+	return ioutil.WriteFile(path, data, FILEPERMISSIONMODE)
 }
