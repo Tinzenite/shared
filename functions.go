@@ -220,11 +220,9 @@ FileExists checks whether a file at that location exists.
 */
 func FileExists(path string) (bool, error) {
 	stat, err := os.Lstat(path)
-	if err == os.ErrNotExist {
-		return false, nil
-	}
+	// sadly any error means it doesn't exist, no way to differentiate easily here
 	if err != nil {
-		return false, err
+		return false, nil
 	}
 	if stat.IsDir() {
 		return false, errors.New("path is not a file")
@@ -237,11 +235,9 @@ DirectoryExists checks whether a directory at that location exists.
 */
 func DirectoryExists(path string) (bool, error) {
 	stat, err := os.Lstat(path)
-	if err == os.ErrNotExist {
-		return false, nil
-	}
+	// sadly any error means it doesn't exist, no way to differentiate easily here
 	if err != nil {
-		return false, err
+		return false, nil
 	}
 	if !stat.IsDir() {
 		return false, errors.New("path is not a directory")
