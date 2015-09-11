@@ -97,6 +97,28 @@ func Test_ObjectExists(t *testing.T) {
 	// missing: error case
 }
 
+func Test_IsDirectoryEmpty(t *testing.T) {
+	// make dir for tests so that we can easily clean up afterwards
+	root := makeTempDir("", "root")
+	defer removeTemp(root)
+	// test empty dir
+	empty, err := IsDirectoryEmpty(root)
+	if empty == false || err != nil {
+		t.Error("Expected dir to be empty, got", empty, "or", err)
+	}
+	// test non empty dir
+	tempFile := makeTempFile(root, "file")
+	empty, err = IsDirectoryEmpty(root)
+	if empty == true || err != nil {
+		t.Error("Expected dir to NOT be empty, got", empty, "or", err)
+	}
+	// test file instead of dir
+	empty, err = IsDirectoryEmpty(tempFile)
+	if empty == true || err == nil {
+		t.Error("Expected error, got", empty, "or", err)
+	}
+}
+
 func makeTempFile(path, name string) string {
 	file, _ := ioutil.TempFile(path, name)
 	return file.Name()
