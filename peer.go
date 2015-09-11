@@ -21,7 +21,7 @@ type Peer struct {
 /*
 CreatePeer returns a peer object for the given parameters.
 */
-func CreatePeer(name, address string) (*Peer, error) {
+func CreatePeer(name string, address string, encrypted bool) (*Peer, error) {
 	ident, err := NewIdentifier()
 	if err != nil {
 		return nil, err
@@ -30,7 +30,7 @@ func CreatePeer(name, address string) (*Peer, error) {
 		Name:           name,
 		Address:        address,
 		Protocol:       CmTox,
-		encrypted:      false,
+		encrypted:      encrypted,
 		Identification: ident,
 		initialized:    false}, nil
 }
