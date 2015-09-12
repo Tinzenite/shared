@@ -53,17 +53,17 @@ peers.
 */
 type RequestMessage struct {
 	Type           MsgType
-	Request        Request
+	ObjType        ObjectType
 	Identification string
 }
 
 /*
 CreateRequestMessage is a convenience method for building an instance of the message.
 */
-func CreateRequestMessage(req Request, identification string) RequestMessage {
+func CreateRequestMessage(ot ObjectType, identification string) RequestMessage {
 	return RequestMessage{
 		Type:           MsgRequest,
-		Request:        req,
+		ObjType:        ot,
 		Identification: identification}
 }
 
@@ -76,12 +76,12 @@ func (rm *RequestMessage) JSON() string {
 }
 
 func (rm *RequestMessage) String() string {
-	return "RequestMessage{Type:" + rm.Type.String() + ",Request:" +
-		rm.Request.String() + ",Identification:" + rm.Identification + "}"
+	return "RequestMessage{Type:" + rm.Type.String() + ",ObjType:" +
+		rm.ObjType.String() + ",Identification:" + rm.Identification + "}"
 }
 
 /*
-NotifyMessage is used to notify another peer of TODO what?
+NotifyMessage is used to notify another peer of completed removals.
 */
 type NotifyMessage struct {
 	Type           MsgType
@@ -110,4 +110,66 @@ func (nm *NotifyMessage) JSON() string {
 func (nm *NotifyMessage) String() string {
 	// TODO fix
 	return nm.JSON()
+}
+
+/*
+LockMessage is the message used to lock an encrypted peer.
+*/
+type LockMessage struct {
+	Type   MsgType
+	Action LockAction
+}
+
+/*
+CreateLockMessage is a convenience method for building an instance of the message.
+*/
+func CreateLockMessage(action LockAction) LockMessage {
+	return LockMessage{
+		Type:   MsgLock,
+		Action: action}
+}
+
+/*
+JSON representation of this message.
+*/
+func (lm *LockMessage) JSON() string {
+	data, _ := json.Marshal(lm)
+	return string(data)
+}
+
+func (lm *LockMessage) String() string {
+	return "LockMessage{Type:" + lm.Type.String() + ",Action:" + lm.Action.String() + "}"
+}
+
+/*
+PushMessage is the message used to notify an encrypted peer of an incomming file
+transfer.
+*/
+type PushMessage struct {
+	Type           MsgType
+	Identification string
+	ObjType        ObjectType
+}
+
+/*
+CreatePushMessage is a convenience method for building an instance of the message.
+*/
+func CreatePushMessage(identification string, ot ObjectType) PushMessage {
+	return PushMessage{
+		Type:           MsgPush,
+		Identification: identification,
+		ObjType:        ot}
+}
+
+/*
+JSON representation of this message.
+*/
+func (pm *PushMessage) JSON() string {
+	data, _ := json.Marshal(pm)
+	return string(data)
+}
+
+func (pm *PushMessage) String() string {
+	return "PushMessage{Type:" + pm.Type.String() + ",Identification:" + pm.Identification +
+		",ObjType:" + pm.ObjType.String() + "}"
 }

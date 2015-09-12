@@ -38,6 +38,10 @@ const (
 	MsgRequest
 	/*MsgNotify is a NotifyMessage.*/
 	MsgNotify
+	/*MsgLock is a LockMessage.*/
+	MsgLock
+	/*MsgPush is a PushMessage.*/
+	MsgPush
 )
 
 func (msg MsgType) String() string {
@@ -50,6 +54,10 @@ func (msg MsgType) String() string {
 		return "request"
 	case MsgNotify:
 		return "notify"
+	case MsgLock:
+		return "lock"
+	case MsgPush:
+		return "push"
 	default:
 		return "unknown"
 	}
@@ -85,30 +93,64 @@ func (op Operation) String() string {
 }
 
 /*
-Request defines what has been requested.
+ObjectType defines the type of Request or Push.
 */
-type Request int
+type ObjectType int
 
 const (
-	/*ReNone is default empty request.*/
-	ReNone Request = iota
-	/*ReObject requests an object.*/
-	ReObject
-	/*ReModel requests the model.*/
-	ReModel
-	/*RePeer requests the connected peers peer file.*/
-	RePeer
+	/*OtNone is default empty request.*/
+	OtNone ObjectType = iota
+	/*OtObject requests an object.*/
+	OtObject
+	/*OtModel requests the model.*/
+	OtModel
+	/*OtPeer requests the connected peers peer file.*/
+	OtPeer
 )
 
-func (req Request) String() string {
-	switch req {
-	case ReNone:
-		return "None"
-	case ReObject:
-		return "Object"
-	case ReModel:
-		return "Model"
+func (ot ObjectType) String() string {
+	switch ot {
+	case OtNone:
+		return "none"
+	case OtObject:
+		return "object"
+	case OtModel:
+		return "model"
+	case OtPeer:
+		return "peer"
 	default:
 		return "unknown"
+	}
+}
+
+/*
+LockAction defines what action a LockMessage is.
+*/
+type LockAction int
+
+const (
+	/*LoNone is the default empty action.*/
+	LoNone LockAction = iota
+	/*LoRequest is a request for a lock.*/
+	LoRequest
+	/*LoRelease is a release request for a lock.*/
+	LoRelease
+	/*LoAccept is used to notify of a successful previous operation.*/
+	LoAccept
+)
+
+func (lock LockAction) String() string {
+	switch lock {
+	case LoNone:
+		return "none"
+	case LoRequest:
+		return "request"
+	case LoRelease:
+		return "release"
+	case LoAccept:
+		return "accept"
+	default:
+		return "unknown"
+
 	}
 }
