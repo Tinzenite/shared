@@ -154,3 +154,52 @@ func (lock LockAction) String() string {
 
 	}
 }
+
+/*
+Cmd is the enum for which operation the program should execute. Satisfies the
+Value interface so that it can be used in flag.
+*/
+type Cmd int
+
+const (
+	/*CmdNone is the default empty command.*/
+	CmdNone Cmd = iota
+	/*CmdCreate is the create command.*/
+	CmdCreate
+	/*CmdLoad is the load command.*/
+	CmdLoad
+	/*CmdBootstrap is the bootstrap command.*/
+	CmdBootstrap
+)
+
+func (c Cmd) String() string {
+	switch c {
+	case CmdNone:
+		return "none"
+	case CmdCreate:
+		return "create"
+	case CmdLoad:
+		return "load"
+	case CmdBootstrap:
+		return "bootstrap"
+	default:
+		return "unknown"
+	}
+}
+
+/*
+CmdParse parses a string to cmd. If illegal or can not be matched will simply
+return cmdNone.
+*/
+func CmdParse(value string) Cmd {
+	switch value {
+	case "create":
+		return CmdCreate
+	case "load":
+		return CmdLoad
+	case "bootstrap":
+		return CmdBootstrap
+	default:
+		return CmdNone
+	}
+}

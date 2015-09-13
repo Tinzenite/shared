@@ -1,14 +1,17 @@
 package shared
 
 import (
+	"bufio"
 	"crypto/md5"
 	"crypto/rand"
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/user"
+	"strconv"
 	"strings"
 )
 
@@ -303,4 +306,33 @@ func Contains(s []string, value string) bool {
 		}
 	}
 	return false
+}
+
+/*
+GetString poses a request to the user and returns his entry as a string.
+*/
+func GetString(request string) string {
+	fmt.Println(request)
+	// read input
+	reader := bufio.NewReader(os.Stdin)
+	input, _ := reader.ReadString('\n')
+	input = strings.Trim(input, "\n")
+	return input
+}
+
+/*
+GetInt poses a request to the user and returns his entry as an integer.
+*/
+func GetInt(request string) int {
+	for {
+		fmt.Println(request)
+		// read input
+		reader := bufio.NewReader(os.Stdin)
+		input, _ := reader.ReadString('\n')
+		input = strings.Trim(input, "\n")
+		value, err := strconv.ParseInt(input, 10, 0)
+		if err == nil {
+			return int(value)
+		}
+	}
 }

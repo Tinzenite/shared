@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -77,33 +76,4 @@ CreateAnswer creates an answer for the given question.
 */
 func (q *Question) CreateAnswer(option int, valid ...string) {
 	q.answers = append(q.answers, Answer{option: option, valid: valid})
-}
-
-/*
-GetString poses a request to the user and returns his entry as a string.
-*/
-func GetString(request string) string {
-	fmt.Println(request)
-	// read input
-	reader := bufio.NewReader(os.Stdin)
-	input, _ := reader.ReadString('\n')
-	input = strings.Trim(input, "\n")
-	return input
-}
-
-/*
-GetInt poses a request to the user and returns his entry as an integer.
-*/
-func GetInt(request string) int {
-	for {
-		fmt.Println(request)
-		// read input
-		reader := bufio.NewReader(os.Stdin)
-		input, _ := reader.ReadString('\n')
-		input = strings.Trim(input, "\n")
-		value, err := strconv.ParseInt(input, 10, 0)
-		if err == nil {
-			return int(value)
-		}
-	}
 }
