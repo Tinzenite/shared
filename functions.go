@@ -20,13 +20,18 @@ IsTinzenite checks whether a given path is indeed a valid directory
 */
 // TODO detect incomplete dir (no connected peers, etc) or write a validate method
 func IsTinzenite(dirpath string) bool {
-	_, err := os.Stat(dirpath + "/" + TINZENITEDIR)
-	if err == nil {
-		return true
-	}
-	// NOTE: object may exist but we may not have permission to access it: in that case
-	//       we consider it unaccessible and thus return false
-	return false
+	value, _ := DirectoryExists(dirpath + "/" + TINZENITEDIR)
+	return value
+}
+
+/*
+IsEncrypted checks whether a given path is indeed a valid directory for an
+encrypted peer.
+*/
+// TODO detect incomplete dir (no connected peers, etc) or write a validate method
+func IsEncrypted(dirpath string) bool {
+	value, _ := DirectoryExists(dirpath + "/" + ORGDIR)
+	return value
 }
 
 /*
