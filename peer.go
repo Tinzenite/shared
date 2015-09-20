@@ -10,18 +10,17 @@ import (
 Peer is the communication representation of a Tinzenite peer.
 */
 type Peer struct {
-	Name           string
-	Address        string
-	Protocol       Communication
-	encrypted      bool
-	Identification string
-	initialized    bool
+	Name           string        // user defined name for the peer
+	Address        string        // tox address of the peer
+	Protocol       Communication // for now always Tox
+	Trusted        bool          // if trusted peer (meaning it must satisfy a challenge)
+	Identification string        // internal ID of peer
 }
 
 /*
 CreatePeer returns a peer object for the given parameters.
 */
-func CreatePeer(name string, address string, encrypted bool) (*Peer, error) {
+func CreatePeer(name string, address string, trusted bool) (*Peer, error) {
 	ident, err := NewIdentifier()
 	if err != nil {
 		return nil, err
@@ -30,9 +29,8 @@ func CreatePeer(name string, address string, encrypted bool) (*Peer, error) {
 		Name:           name,
 		Address:        address,
 		Protocol:       CmTox,
-		encrypted:      encrypted,
-		Identification: ident,
-		initialized:    false}, nil
+		Trusted:        trusted,
+		Identification: ident}, nil
 }
 
 /*

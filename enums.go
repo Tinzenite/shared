@@ -42,6 +42,8 @@ const (
 	MsgLock
 	/*MsgPush is a PushMessage.*/
 	MsgPush
+	/*MsgChallenge is a ChallengeMessage.*/
+	MsgChallenge
 )
 
 func (msg MsgType) String() string {
@@ -58,6 +60,8 @@ func (msg MsgType) String() string {
 		return "lock"
 	case MsgPush:
 		return "push"
+	case MsgChallenge:
+		return "challenge"
 	default:
 		return "unknown"
 	}

@@ -1,6 +1,9 @@
 package shared
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 /*
 TODO: check if via Unmarshal Method we can output the enums as strings instead of
@@ -172,4 +175,37 @@ func (pm *PushMessage) JSON() string {
 func (pm *PushMessage) String() string {
 	return "PushMessage{Type:" + pm.Type.String() + ",Identification:" + pm.Identification +
 		",ObjType:" + pm.ObjType.String() + "}"
+}
+
+/*
+AuthenticationMessage is the message used to authenticate trusted peers.
+*/
+type AuthenticationMessage struct {
+	Type      MsgType
+	Encrypted []byte
+	Nonce     *[24]byte
+}
+
+/*
+CreateAuthenticationMessage is a convenience method for building an instance of the message.
+*/
+func CreateAuthenticationMessage(encrypted []byte, nonce *[24]byte) AuthenticationMessage {
+	return AuthenticationMessage{
+		Type:      MsgChallenge,
+		Encrypted: encrypted,
+		Nonce:     nonce}
+}
+
+/*
+JSON representation of this message.
+*/
+func (am *AuthenticationMessage) JSON() string {
+	data, _ := json.Marshal(am)
+	return string(data)
+}
+
+func (am *AuthenticationMessage) String() string {
+	return "AuthenticationMessage{Type:" + am.Type.String() +
+		",Encrypted:" + fmt.Sprintf("%+v", am.Encrypted) +
+		",Nonce:" + fmt.Sprintf("%+v", am.Nonce) + "}"
 }
