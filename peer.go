@@ -15,6 +15,7 @@ type Peer struct {
 	Protocol       Communication // for now always Tox
 	Trusted        bool          // if trusted peer (meaning it must satisfy a challenge)
 	Identification string        // internal ID of peer
+	authenticated  bool          // if true this peer passed authentication
 }
 
 /*
@@ -30,19 +31,20 @@ func CreatePeer(name string, address string, trusted bool) (*Peer, error) {
 		Address:        address,
 		Protocol:       CmTox,
 		Trusted:        trusted,
-		Identification: ident}, nil
+		Identification: ident,
+		authenticated:  false}, nil
 }
 
 /*
 LoadPeers loads all peers for the given tinzenite root path.
 */
-func LoadPeers(root string) ([]*Peer, error) {
+func LoadPeers(root string) (map[string]*Peer, error) {
 	path := root + "/" + TINZENITEDIR + "/" + ORGDIR + "/" + PEERSDIR
 	peersFiles, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
-	var peers []*Peer
+	peers := make(map[string]*Peer)
 	for _, stat := range peersFiles {
 		data, err := ioutil.ReadFile(path + "/" + stat.Name())
 		if err != nil {
@@ -55,7 +57,7 @@ func LoadPeers(root string) ([]*Peer, error) {
 			log.Println("Error unmarshaling peer " + stat.Name() + " from disk!")
 			continue
 		}
-		peers = append(peers, peer)
+		peers[peer.Address] = peer
 	}
 	return peers, nil
 }
@@ -73,4 +75,19 @@ func (p *Peer) StoreTo(path string) error {
 	path = path + "/" + p.Identification + ENDING
 	// write
 	return ioutil.WriteFile(path, data, FILEPERMISSIONMODE)
+}
+
+/*
+IsAuthenticated returns the set value whether the Peer has been set as
+authenticated.
+*/
+func (p *Peer) IsAuthenticated() bool {
+	return p.authenticated
+}
+
+/*
+SetAuthenticated allows to set whether a peer has been authenticated.
+*/
+func (p *Peer) SetAuthenticated(value bool) {
+	p.authenticated = value
 }
