@@ -46,16 +46,17 @@ const (
 // Path constants here
 const (
 	TINZENITEDIR   = ".tinzenite"
-	TINIGNORE      = ".tinignore"
+	TINIGNORE      = ".tinignore" // correct valid name of .tinignore files
 	DIRECTORYLIST  = "directory.list"
-	LOCALDIR       = "local"
+	LOCALDIR       = "local" // info to the local peer is stored here
 	TEMPDIR        = "temp"
-	RECEIVINGDIR   = "receiving"
-	REMOVEDIR      = "removed"
-	REMOVECHECKDIR = "check"
-	REMOVEDONEDIR  = "done"
-	REMOVESTOREDIR = "rmstore"
-	ORGDIR         = "org"
+	RECEIVINGDIR   = "receiving" // dir for receiving transfers
+	SENDINGDIR     = "sending"   // send dir for now only used in encrypted
+	REMOVEDIR      = "removed"   // remove
+	REMOVECHECKDIR = "check"     // remove
+	REMOVEDONEDIR  = "done"      // remove
+	REMOVESTOREDIR = "rmstore"   // local remove check dir
+	ORGDIR         = "org"       // only directory that IS synchronized as normal
 	PEERSDIR       = "peers"
 	ENDING         = ".json"
 	AUTHJSON       = "auth" + ENDING

@@ -35,11 +35,11 @@ func IsEncrypted(dirpath string) bool {
 }
 
 /*
-MakeDotTinzenite creates the directory structure for the .tinzenite directory
+MakeTinzeniteDir creates the directory structure for the .tinzenite directory
 including the .tinignore file required for it. The given path is the path to the
 directory (NOT the .TINZENITEDIR!).
 */
-func MakeDotTinzenite(root string) error {
+func MakeTinzeniteDir(root string) error {
 	root = root + "/" + TINZENITEDIR
 	// build directory structure
 	err := MakeDirectories(root, ORGDIR+"/"+PEERSDIR, TEMPDIR, REMOVEDIR, LOCALDIR, LOCALDIR+"/"+REMOVESTOREDIR, RECEIVINGDIR)
@@ -48,6 +48,15 @@ func MakeDotTinzenite(root string) error {
 	}
 	// write required .tinignore file
 	return ioutil.WriteFile(root+"/"+TINIGNORE, []byte(TINDIRIGNORE), FILEPERMISSIONMODE)
+}
+
+/*
+MakeEncryptedDir builds the directory structure for an encrypted peer. The given
+path is the path to the directory.
+*/
+func MakeEncryptedDir(root string) error {
+	peers := ORGDIR + "/" + PEERSDIR
+	return MakeDirectories(root, LOCALDIR, ORGDIR, peers, RECEIVINGDIR, SENDINGDIR)
 }
 
 /*
