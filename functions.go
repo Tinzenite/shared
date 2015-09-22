@@ -30,7 +30,7 @@ encrypted peer.
 */
 // TODO detect incomplete dir (no connected peers, etc) or write a validate method
 func IsEncrypted(dirpath string) bool {
-	value, _ := DirectoryExists(dirpath + "/" + ORGDIR)
+	value, _ := DirectoryExists(dirpath + "/" + LOCALDIR)
 	return value
 }
 
