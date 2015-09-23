@@ -3,12 +3,8 @@ package shared
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 )
-
-/*
-TODO: check if via Unmarshal Method we can output the enums as strings instead of
-integer values. Should be written to enums.go, I guess?
-*/
 
 /*
 Message is a base type for only reading out the operation to define the message
@@ -41,7 +37,10 @@ func CreateUpdateMessage(op Operation, obj ObjectInfo) UpdateMessage {
 JSON representation of this message.
 */
 func (um *UpdateMessage) JSON() string {
-	data, _ := json.Marshal(um)
+	data, err := json.Marshal(um)
+	if err != nil {
+		log.Println("Msg: JSON error:", err)
+	}
 	return string(data)
 }
 
@@ -74,7 +73,10 @@ func CreateRequestMessage(ot ObjectType, identification string) RequestMessage {
 JSON representation of this message.
 */
 func (rm *RequestMessage) JSON() string {
-	data, _ := json.Marshal(rm)
+	data, err := json.Marshal(rm)
+	if err != nil {
+		log.Println("Msg: JSON error:", err)
+	}
 	return string(data)
 }
 
@@ -106,7 +108,10 @@ func CreateNotifyMessage(op Operation, identification string) NotifyMessage {
 JSON representation of this message.
 */
 func (nm *NotifyMessage) JSON() string {
-	data, _ := json.Marshal(nm)
+	data, err := json.Marshal(nm)
+	if err != nil {
+		log.Println("Msg: JSON error:", err)
+	}
 	return string(data)
 }
 
@@ -136,7 +141,10 @@ func CreateLockMessage(action LockAction) LockMessage {
 JSON representation of this message.
 */
 func (lm *LockMessage) JSON() string {
-	data, _ := json.Marshal(lm)
+	data, err := json.Marshal(lm)
+	if err != nil {
+		log.Println("Msg: JSON error:", err)
+	}
 	return string(data)
 }
 
@@ -168,7 +176,10 @@ func CreatePushMessage(identification string, ot ObjectType) PushMessage {
 JSON representation of this message.
 */
 func (pm *PushMessage) JSON() string {
-	data, _ := json.Marshal(pm)
+	data, err := json.Marshal(pm)
+	if err != nil {
+		log.Println("Msg: JSON error:", err)
+	}
 	return string(data)
 }
 
@@ -200,7 +211,10 @@ func CreateAuthenticationMessage(encrypted []byte, nonce *[24]byte) Authenticati
 JSON representation of this message.
 */
 func (am *AuthenticationMessage) JSON() string {
-	data, _ := json.Marshal(am)
+	data, err := json.Marshal(am)
+	if err != nil {
+		log.Println("Msg: JSON error:", err)
+	}
 	return string(data)
 }
 

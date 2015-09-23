@@ -1,5 +1,10 @@
 package shared
 
+import (
+	"encoding/json"
+	"errors"
+)
+
 /*
 Communication is an enumeration for the available communication methods
 of Tinzenite peers.
@@ -65,6 +70,44 @@ func (msg MsgType) String() string {
 	default:
 		return "unknown"
 	}
+}
+
+/*
+MarshalJSON overrides json.Marshal for this type.
+*/
+func (msg *MsgType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(msg.String())
+}
+
+/*
+UnmarshalJSON overrides json.Unmarshal for this type.
+*/
+func (msg *MsgType) UnmarshalJSON(data []byte) error {
+	value := string(data)
+	if len(value) <= 1 {
+		return errors.New("impossible MsgType: " + value)
+	}
+	// split ""
+	value = value[1 : len(value)-1]
+	switch value {
+	case "none":
+		*msg = MsgNone
+	case "update":
+		*msg = MsgUpdate
+	case "request":
+		*msg = MsgRequest
+	case "notify":
+		*msg = MsgNotify
+	case "lock":
+		*msg = MsgLock
+	case "push":
+		*msg = MsgPush
+	case "challenge":
+		*msg = MsgChallenge
+	default:
+		return errors.New("invalid MsgType: " + value)
+	}
+	return nil
 }
 
 /*
