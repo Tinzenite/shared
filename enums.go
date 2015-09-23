@@ -171,6 +171,38 @@ func (ot ObjectType) String() string {
 }
 
 /*
+MarshalJSON overrides json.Marshal for this type.
+*/
+func (ot *ObjectType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(ot.String())
+}
+
+/*
+UnmarshalJSON overrides json.Unmarshal for this type.
+*/
+func (ot *ObjectType) UnmarshalJSON(data []byte) error {
+	value := string(data)
+	if len(value) <= 1 {
+		return errors.New("impossible ObjectType: " + value)
+	}
+	// split ""
+	value = value[1 : len(value)-1]
+	switch value {
+	case "none":
+		*ot = OtNone
+	case "object":
+		*ot = OtObject
+	case "model":
+		*ot = OtModel
+	case "peer":
+		*ot = OtPeer
+	default:
+		return errors.New("invalid ObjectType: " + value)
+	}
+	return nil
+}
+
+/*
 LockAction defines what action a LockMessage is.
 */
 type LockAction int
@@ -200,6 +232,38 @@ func (lock LockAction) String() string {
 		return "unknown"
 
 	}
+}
+
+/*
+MarshalJSON overrides json.Marshal for this type.
+*/
+func (lock *LockAction) MarshalJSON() ([]byte, error) {
+	return json.Marshal(lock.String())
+}
+
+/*
+UnmarshalJSON overrides json.Unmarshal for this type.
+*/
+func (lock *LockAction) UnmarshalJSON(data []byte) error {
+	value := string(data)
+	if len(value) <= 1 {
+		return errors.New("impossible LockAction: " + value)
+	}
+	// split ""
+	value = value[1 : len(value)-1]
+	switch value {
+	case "none":
+		*lock = LoNone
+	case "request":
+		*lock = LoRequest
+	case "release":
+		*lock = LoRelease
+	case "accept":
+		*lock = LoAccept
+	default:
+		return errors.New("invalid LockAction: " + value)
+	}
+	return nil
 }
 
 /*
