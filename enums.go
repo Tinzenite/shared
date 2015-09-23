@@ -267,6 +267,63 @@ func (lock *LockAction) UnmarshalJSON(data []byte) error {
 }
 
 /*
+NotifyType defines what notify action a NotifyMessage is to be.
+*/
+type NotifyType int
+
+const (
+	/*NoNone is the default empty notify.*/
+	NoNone NotifyType = iota
+	/*NoRemoved is the removed notification.*/
+	NoRemoved
+	/*NoMissing is the missing notification.*/
+	NoMissing
+)
+
+func (n NotifyType) String() string {
+	switch n {
+	case NoNone:
+		return "none"
+	case NoRemoved:
+		return "removed"
+	case NoMissing:
+		return "missing"
+	default:
+		return "unknown"
+	}
+}
+
+/*
+MarshalJSON overrides json.Marshal for this type.
+*/
+func (n *NotifyType) MarshalJSON() ([]byte, error) {
+	return json.Marshal(n.String())
+}
+
+/*
+UnmarshalJSON overrides json.Unmarshal for this type.
+*/
+func (n *NotifyType) UnmarshalJSON(data []byte) error {
+	value := string(data)
+	if len(value) <= 1 {
+		return errors.New("impossible NotifyType: " + value)
+	}
+	// split ""
+	value = value[1 : len(value)-1]
+	switch value {
+	case "none":
+		*n = NoNone
+	case "removed":
+		*n = NoRemoved
+	case "missing":
+		*n = NoMissing
+	default:
+		return errors.New("invalid NotifyType: " + value)
+	}
+	return nil
+}
+
+/*
 Cmd is the enum for which operation the program should execute. Satisfies the
 Value interface so that it can be used in flag.
 */

@@ -45,8 +45,9 @@ func (um *UpdateMessage) JSON() string {
 }
 
 func (um *UpdateMessage) String() string {
-	return "UpdateMessage{Type:" + um.Type.String() + ",Operation:" +
-		um.Operation.String() + "," + um.Object.String() + "}"
+	return "UpdateMessage{Type:" + um.Type.String() +
+		",Operation:" + um.Operation.String() +
+		",Object:" + um.Object.String() + "}"
 }
 
 /*
@@ -81,26 +82,27 @@ func (rm *RequestMessage) JSON() string {
 }
 
 func (rm *RequestMessage) String() string {
-	return "RequestMessage{Type:" + rm.Type.String() + ",ObjType:" +
-		rm.ObjType.String() + ",Identification:" + rm.Identification + "}"
+	return "RequestMessage{Type:" + rm.Type.String() +
+		",ObjType:" + rm.ObjType.String() +
+		",Identification:" + rm.Identification + "}"
 }
 
 /*
-NotifyMessage is used to notify another peer of completed removals.
+NotifyMessage is used to notify another peer of special cases.
 */
 type NotifyMessage struct {
 	Type           MsgType
-	Operation      Operation
+	Notify         NotifyType
 	Identification string
 }
 
 /*
 CreateNotifyMessage is a convenience method for building an instance of the message.
 */
-func CreateNotifyMessage(op Operation, identification string) NotifyMessage {
+func CreateNotifyMessage(notify NotifyType, identification string) NotifyMessage {
 	return NotifyMessage{
 		Type:           MsgNotify,
-		Operation:      op,
+		Notify:         notify,
 		Identification: identification}
 }
 
@@ -116,8 +118,9 @@ func (nm *NotifyMessage) JSON() string {
 }
 
 func (nm *NotifyMessage) String() string {
-	// TODO fix
-	return nm.JSON()
+	return "NotifyMessage{Type:" + nm.Type.String() +
+		",Notify:" + nm.Notify.String() +
+		",Identification:" + nm.Identification + "}"
 }
 
 /*
@@ -149,7 +152,8 @@ func (lm *LockMessage) JSON() string {
 }
 
 func (lm *LockMessage) String() string {
-	return "LockMessage{Type:" + lm.Type.String() + ",Action:" + lm.Action.String() + "}"
+	return "LockMessage{Type:" + lm.Type.String() +
+		",Action:" + lm.Action.String() + "}"
 }
 
 /*
@@ -184,7 +188,8 @@ func (pm *PushMessage) JSON() string {
 }
 
 func (pm *PushMessage) String() string {
-	return "PushMessage{Type:" + pm.Type.String() + ",Identification:" + pm.Identification +
+	return "PushMessage{Type:" + pm.Type.String() +
+		",Identification:" + pm.Identification +
 		",ObjType:" + pm.ObjType.String() + "}"
 }
 
