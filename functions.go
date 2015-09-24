@@ -42,7 +42,8 @@ directory (NOT the .TINZENITEDIR!).
 func MakeTinzeniteDir(root string) error {
 	root = root + "/" + TINZENITEDIR
 	// build directory structure
-	err := MakeDirectories(root, ORGDIR+"/"+PEERSDIR, TEMPDIR, REMOVEDIR, LOCALDIR, LOCALDIR+"/"+REMOVESTOREDIR, RECEIVINGDIR)
+	err := MakeDirectories(root, ORGDIR+"/"+PEERSDIR, TEMPDIR, REMOVEDIR,
+		LOCALDIR, LOCALDIR+"/"+REMOVESTOREDIR, RECEIVINGDIR, SENDINGDIR)
 	if err != nil {
 		return err
 	}
