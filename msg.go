@@ -163,18 +163,16 @@ transfer.
 type PushMessage struct {
 	Type           MsgType
 	Identification string
-	Name           string
 	ObjType        ObjectType
 }
 
 /*
 CreatePushMessage is a convenience method for building an instance of the message.
 */
-func CreatePushMessage(identification, name string, ot ObjectType) PushMessage {
+func CreatePushMessage(identification string, ot ObjectType) PushMessage {
 	return PushMessage{
 		Type:           MsgPush,
 		Identification: identification,
-		Name:           name,
 		ObjType:        ot}
 }
 
@@ -192,7 +190,6 @@ func (pm *PushMessage) JSON() string {
 func (pm *PushMessage) String() string {
 	return "PushMessage{Type:" + pm.Type.String() +
 		",Identification:" + pm.Identification +
-		",Name:" + pm.Name +
 		",ObjType:" + pm.ObjType.String() + "}"
 }
 

@@ -16,6 +16,7 @@ type Peer struct {
 	Trusted        bool          // if trusted peer (meaning it must satisfy a challenge)
 	Identification string        // internal ID of peer
 	authenticated  bool          // if true this peer passed authentication
+	locked         bool          // check if already locked so that we don't try to sync multiple times over each other
 }
 
 /*
@@ -32,7 +33,8 @@ func CreatePeer(name string, address string, trusted bool) (*Peer, error) {
 		Protocol:       CmTox,
 		Trusted:        trusted,
 		Identification: ident,
-		authenticated:  false}, nil
+		authenticated:  false,
+		locked:         false}, nil
 }
 
 /*
@@ -90,4 +92,18 @@ SetAuthenticated allows to set whether a peer has been authenticated.
 */
 func (p *Peer) SetAuthenticated(value bool) {
 	p.authenticated = value
+}
+
+/*
+IsLocked returns the value of p.locked.
+*/
+func (p *Peer) IsLocked() bool {
+	return p.locked
+}
+
+/*
+SetLocked sets the value of p.locked.
+*/
+func (p *Peer) SetLocked(value bool) {
+	p.locked = value
 }
