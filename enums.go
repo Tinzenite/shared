@@ -153,6 +153,8 @@ const (
 	OtModel
 	/*OtPeer requests the connected peers peer file.*/
 	OtPeer
+	/*OtAuth requests the authentication file.*/
+	OtAuth
 )
 
 func (ot ObjectType) String() string {
@@ -165,6 +167,8 @@ func (ot ObjectType) String() string {
 		return "model"
 	case OtPeer:
 		return "peer"
+	case OtAuth:
+		return "auth"
 	default:
 		return "unknown"
 	}
@@ -196,6 +200,8 @@ func (ot *ObjectType) UnmarshalJSON(data []byte) error {
 		*ot = OtModel
 	case "peer":
 		*ot = OtPeer
+	case "auth":
+		*ot = OtAuth
 	default:
 		return errors.New("invalid ObjectType: " + value)
 	}
