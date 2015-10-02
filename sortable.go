@@ -1,5 +1,7 @@
 package shared
 
+import "sort"
+
 //TODO all these sort things all sort string paths basically. Can this be improved?
 
 /*
@@ -53,4 +55,13 @@ func (s SortableString) Swap(i, j int) {
 func (s SortableString) Less(i, j int) bool {
 	// path are sorted alphabetically all by themselves! :D
 	return s[i] < s[j]
+}
+
+/*
+SortString sorts an array of strings representing paths by length.
+*/
+func SortString(list []string) []string {
+	sortable := SortableString(list)
+	sort.Sort(sortable)
+	return []string(sortable)
 }

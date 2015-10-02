@@ -1,6 +1,9 @@
 package shared
 
-import "strings"
+import (
+	"log"
+	"strings"
+)
 
 /*
 RelativePath implements a path consisting of a base path and any subpath that
@@ -43,7 +46,16 @@ func (r *RelativePath) FullPath() string {
 LastElement returns the last element of the complete path.
 */
 func (r *RelativePath) LastElement() string {
-	return r.stack[len(r.stack)-1]
+	if len(r.stack) == 0 {
+		log.Println("RelativePath: WARNING: empty stack!")
+		return ""
+	}
+	// make sure we remain within safe values
+	element := len(r.stack) - 1
+	if element < 0 {
+		element = 0
+	}
+	return r.stack[element]
 }
 
 /*

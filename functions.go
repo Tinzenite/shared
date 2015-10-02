@@ -351,3 +351,24 @@ func GetInt(request string) int {
 		}
 	}
 }
+
+/*
+Difference takes the starting and target path lists and returns the operations
+required for each path to get from the starting to the target maps.
+*/
+func Difference(start, target map[string]bool) (created, modified, removed []string) {
+	for subpath := range start {
+		_, exists := target[subpath]
+		if exists {
+			delete(target, subpath)
+			modified = append(modified, subpath)
+		} else {
+			removed = append(removed, subpath)
+		}
+	}
+	for subpath := range target {
+		created = append(created, subpath)
+	}
+	// it is important to return these sorted: create dirs before their contents for example
+	return SortString(created), SortString(modified), SortString(removed)
+}

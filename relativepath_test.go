@@ -100,7 +100,8 @@ func TestRelativePath_LastElement(t *testing.T) {
 	testElement := []testCreate{ // we can reuse testCreate for this test
 		{"/a/b", "", "b"},
 		{"a//b", "c", "c"},
-		{"/a/b/c", "d/e/f", "f"}}
+		{"/a/b/c", "d/e/f", "f"},
+		{"", "", ""}}
 	for _, set := range testElement {
 		path := CreatePath(set.root, set.sub)
 		result := path.LastElement()
