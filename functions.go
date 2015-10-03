@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"crypto/md5"
 	"crypto/rand"
-	"crypto/sha256"
 	"encoding/hex"
 	"errors"
 	"fmt"
@@ -130,23 +129,6 @@ func directoryListPath() (*RelativePath, error) {
 		return nil, err
 	}
 	return CreatePath(user.HomeDir+"/.config/tinzenite/", DIRECTORYLIST), nil
-}
-
-/*
-RandomHash genereates one long random hash.
-*/
-func RandomHash() (string, error) {
-	data := make([]byte, RANDOMSEEDLENGTH)
-	_, err := rand.Read(data)
-	if err != nil {
-		return "", err
-	}
-	hash := sha256.New()
-	_, err = hash.Write(data)
-	if err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(hash.Sum(nil)), nil
 }
 
 /*
@@ -355,18 +337,25 @@ func GetInt(request string) int {
 /*
 Difference takes the starting and target path lists and returns the operations
 required for each path to get from the starting to the target maps.
+
+NOTE: Extra care has been taken that Difference does NOT modify the passed map
+references.
 */
 func Difference(start, target map[string]bool) (created, modified, removed []string) {
 	for subpath := range start {
 		_, exists := target[subpath]
 		if exists {
-			delete(target, subpath)
 			modified = append(modified, subpath)
 		} else {
 			removed = append(removed, subpath)
 		}
 	}
 	for subpath := range target {
+		// if already exists it wasn't created, so skip
+		_, exists := start[subpath]
+		if exists {
+			continue
+		}
 		created = append(created, subpath)
 	}
 	// it is important to return these sorted: create dirs before their contents for example
