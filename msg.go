@@ -199,17 +199,15 @@ AuthenticationMessage is the message used to authenticate trusted peers.
 type AuthenticationMessage struct {
 	Type      MsgType
 	Encrypted []byte
-	Nonce     *[24]byte
 }
 
 /*
 CreateAuthenticationMessage is a convenience method for building an instance of the message.
 */
-func CreateAuthenticationMessage(encrypted []byte, nonce *[24]byte) AuthenticationMessage {
+func CreateAuthenticationMessage(encrypted []byte) AuthenticationMessage {
 	return AuthenticationMessage{
 		Type:      MsgChallenge,
-		Encrypted: encrypted,
-		Nonce:     nonce}
+		Encrypted: encrypted}
 }
 
 /*
@@ -225,6 +223,5 @@ func (am *AuthenticationMessage) JSON() string {
 
 func (am *AuthenticationMessage) String() string {
 	return "AuthenticationMessage{Type:" + am.Type.String() +
-		",Encrypted:" + fmt.Sprintf("%+v", am.Encrypted) +
-		",Nonce:" + fmt.Sprintf("%+v", am.Nonce) + "}"
+		",Encrypted:" + fmt.Sprintf("%+v", am.Encrypted) + "}"
 }
