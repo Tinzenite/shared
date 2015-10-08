@@ -140,6 +140,38 @@ func (op Operation) String() string {
 }
 
 /*
+MarshalJSON overrides json.Marshal for this type.
+*/
+func (op *Operation) MarshalJSON() ([]byte, error) {
+	return json.Marshal(op.String())
+}
+
+/*
+UnmarshalJSON overrides json.Unmarshal for this type.
+*/
+func (op *Operation) UnmarshalJSON(data []byte) error {
+	value := string(data)
+	if len(value) <= 1 {
+		return errors.New("impossible Operation: " + value)
+	}
+	// split ""
+	value = value[1 : len(value)-1]
+	switch value {
+	case "create":
+		*op = OpCreate
+	case "modify":
+		*op = OpModify
+	case "remove":
+		*op = OpRemove
+	case "unknown":
+		*op = OpUnknown
+	default:
+		return errors.New("invalid Operation: " + value)
+	}
+	return nil
+}
+
+/*
 ObjectType defines the type of Request or Push.
 */
 type ObjectType int
