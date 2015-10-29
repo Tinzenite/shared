@@ -94,16 +94,18 @@ type NotifyMessage struct {
 	Type           MsgType
 	Notify         NotifyType
 	Identification string
+	ObjType        ObjectType
 }
 
 /*
 CreateNotifyMessage is a convenience method for building an instance of the message.
 */
-func CreateNotifyMessage(notify NotifyType, identification string) NotifyMessage {
+func CreateNotifyMessage(notify NotifyType, identification string, objType ObjectType) NotifyMessage {
 	return NotifyMessage{
 		Type:           MsgNotify,
 		Notify:         notify,
-		Identification: identification}
+		Identification: identification,
+		ObjType:        objType}
 }
 
 /*
@@ -120,7 +122,8 @@ func (nm *NotifyMessage) JSON() string {
 func (nm *NotifyMessage) String() string {
 	return "NotifyMessage{Type:" + nm.Type.String() +
 		",Notify:" + nm.Notify.String() +
-		",Identification:" + nm.Identification + "}"
+		",Identification:" + nm.Identification +
+		",ObjectType:" + nm.ObjType.String() + "}"
 }
 
 /*
